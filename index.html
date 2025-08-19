@@ -1163,21 +1163,39 @@ document.getElementById('betSlider').addEventListener('input', ()=>{
     document.getElementById('toggleHistory').addEventListener('change', renderBets);
 
     async function loadLeaderboard(){
-      const { data, error } = await supabase.from('leaderboard_profiles')
-        .select('display_name, credit')
-        .order('credit', { ascending:false })
+      const { data, error } = await supabase
+        .from('leaderboard_profiles')
+        .select('display_name, wallet, in_bets, total')
+        .order('total', { ascending: false })
         .limit(100);
+
       if (error) { console.error(error); toast('Erro ao carregar leaderboard', true); return; }
-      const tbody = document.getElementById('lbBody'); tbody.innerHTML = '';
+
+      const tbody = document.getElementById('lbBody'); 
+      tbody.innerHTML = '';
+
       (data||[]).forEach((p, i) => {
         const tr = document.createElement('tr');
-        const td1 = document.createElement('td'); td1.textContent = String(i+1);
-        const td2 = document.createElement('td'); td2.textContent = p.display_name;
-        const td3 = document.createElement('td'); td3.className='nowrap'; td3.textContent = fmtMoney.format(Number(p.credit));
-        tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3);
+
+        const td1 = document.createElement('td'); 
+        td1.textContent = String(i+1);
+
+        const td2 = document.createElement('td'); 
+        td2.textContent = p.display_name;
+
+        const td3 = document.createElement('td'); 
+        td3.className = 'nowrap';
+        td3.textContent = 
+          `Total: ${fmtMoney.format(Number(p.total))} | ` +
+          `Na carteira: ${fmtMoney.format(Number(p.wallet))} | ` +
+          `Em apostas: ${fmtMoney.format(Number(p.in_bets))}`;
+
+        tr.appendChild(td1); 
+        tr.appendChild(td2); 
+        tr.appendChild(td3);
         tbody.appendChild(tr);
       });
-    }
+}
 
     // =====================
     // ADMIN
