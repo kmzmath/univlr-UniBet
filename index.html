@@ -98,6 +98,19 @@
     transform: translateY(0);
   }
 
+  /* Preview do time ao lado/abaixo do select no Admin */
+.team-preview{
+  display:flex; align-items:center; gap:8px; margin-top:6px;
+}
+.avatar-sm{
+  width:24px; height:24px; border-radius:6px; overflow:hidden;
+  background: linear-gradient(135deg, var(--primary-600), #22d3ee);
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-weight:800; font-size:.75rem;
+}
+.avatar-sm img{ width:100%; height:100%; object-fit:cover }
+.team-preview .name{ font-weight:700 }
+
   /* Micro-interação nas odds */
   @keyframes pop{ 0%{transform:scale(1)} 60%{transform:scale(1.06)} 100%{transform:scale(1)} }
   .oddbtn.pop{ animation: pop var(--motion-fast) ease-out; }
@@ -262,7 +275,7 @@
     <!-- AUTH -->
     <section id="auth" class="surface card">
       <h2 style="margin:0 0 8px 0">Entrar ou Criar conta</h2>
-      <p class="muted">Ao criar sua conta você começa com <strong>5.000</strong> créditos.</p>
+      <p class="muted">Ao criar sua conta você começa com <strong>50</strong> créditos.</p>
       <div class="grid-2" style="margin-top:12px">
         <form id="signInForm" class="surface card">
           <h3 style="margin-top:0">Já tenho conta</h3>
@@ -429,7 +442,7 @@
     const { createClient } = window.supabase;
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const MAX_PER_MATCH = 1000; // teto por partida
+    const MAX_PER_MATCH = 10; // teto por partida
     // =====================
     // UTIL
     // =====================
@@ -687,28 +700,6 @@ function toISOInBRT(ymdHm) {
       }
       const date = document.getElementById('fltDate');
       if (date) date.value = '';
-    }
-
-    async function ensureRecentLoaded(team){
-      if (!team?.id) return [];
-      if (recentCache.has(team.id)) return recentCache.get(team.id);
-      try{
-        const resp = await fetch(`${APIUNI}/teams/${team.id}/matches?limit=5`, { headers: { 'accept':'application/json' } });
-        if (!resp.ok) return [];
-        const arr = await resp.json(); recentCache.set(team.id, arr); return arr;
-      }catch{ return []; }
-    }
-    function computeFormDots(teamId, arr){
-      const dots = [];
-      for (const mm of (arr||[]).slice(0,5)){
-        const a = mm.tmi_a?.team?.id, b = mm.tmi_b?.team?.id;
-        const sa = mm.tmi_a?.score ?? 0, sb = mm.tmi_b?.score ?? 0;
-        if (a===teamId || b===teamId){
-          const won = (a===teamId) ? (sa>sb) : (sb>sa);
-          dots.push(won ? 'W' : 'L');
-        }
-      }
-      return dots;
     }
 
     // Favorites bar (global)
@@ -1018,27 +1009,6 @@ if (!opts.forBetList && (m.status === 'open') && (new Date(m.start_time).getTime
     extra.appendChild(whenBet);
     wrapper.appendChild(extra);
   }
-
-  // ---------- Form (W/L) dots abaixo do nome, para ambos os lados ----------
-  (async () => {
-    const [ra, rb_] = await Promise.all([ ensureRecentLoaded(ta), ensureRecentLoaded(tb) ]);
-    const da = computeFormDots(ta.id, ra);
-    const db = computeFormDots(tb.id, rb_);
-    const makeDots = (arr) => {
-      const d = document.createElement('div');
-      d.style.display = 'flex'; d.style.gap = '6px'; d.style.marginTop = '6px';
-      for (const x of arr) {
-        const c = document.createElement('span');
-        c.title = (x === 'W') ? 'Vitória' : 'Derrota';
-        c.style.width = '10px'; c.style.height = '10px'; c.style.borderRadius = '50%';
-        c.style.display = 'inline-block'; c.style.background = (x === 'W') ? '#10b981' : '#ef4444';
-        d.appendChild(c);
-      }
-      return d;
-    };
-    lt.appendChild(makeDots(da));
-    rt.appendChild(makeDots(db));
-  })();
 
   // ---------- Mount ----------
   wrapper.appendChild(head);
@@ -1392,35 +1362,102 @@ function restoreAdmForm(){
 })();
 
 
-    async function populateAdminTeamSelects(){
-  const a = document.getElementById('admSelA'); const b = document.getElementById('admSelB');
+  async function populateAdminTeamSelects(){
+  const a = document.getElementById('admSelA'); 
+  const b = document.getElementById('admSelB');
   if (!a || !b) return;
 
   // preserva seleção atual
   const prevA = a.value, prevB = b.value;
 
+  // ordena alfabeticamente pelo nome (case/acentos OK)
+  const sortedTeams = (teams||[])
+    .slice()
+    .sort((x,y) => (x.name||'').localeCompare(y.name||'', 'pt-BR', {sensitivity:'base'}));
+
+  // monta opções apenas com o NOME
   const makeOpts = () => {
     const frag = document.createDocumentFragment();
-    const opt0 = document.createElement('option'); opt0.value=''; opt0.textContent='Selecione...'; frag.appendChild(opt0);
-    for (const t of teams){
+    const opt0 = document.createElement('option');
+    opt0.value=''; opt0.textContent='Selecione...';
+    frag.appendChild(opt0);
+
+    for (const t of sortedTeams){
       const o = document.createElement('option');
       o.value = String(t.id);
-      o.textContent = `${t.tag ? '['+t.tag+'] ' : ''}${t.name} - ${t.university || ''}`;
+      o.textContent = t.name || `#${t.id}`;
       frag.appendChild(o);
     }
     return frag;
   };
 
   a.innerHTML=''; b.innerHTML='';
-  a.appendChild(makeOpts()); b.appendChild(makeOpts());
+  a.appendChild(makeOpts()); 
+  b.appendChild(makeOpts());
 
-  // tenta restaurar seleção anterior
+  // restaura seleção anterior se existir
   if (prevA) a.value = prevA;
   if (prevB) b.value = prevB;
 
-  // e também aplica o que estiver salvo no localStorage
+  // cria/garante previews "Logo + Nome"
+  ensureTeamPreviewForSelect(a, 'admSelAPreview');
+  ensureTeamPreviewForSelect(b, 'admSelBPreview');
+
+  // aplica estado salvo (localStorage) e atualiza previews
   restoreAdmForm();
-}    
+  updateTeamPreview(a, 'admSelAPreview');
+  updateTeamPreview(b, 'admSelBPreview');
+
+  // quando mudar seleção, atualiza preview
+  a.addEventListener('change', () => updateTeamPreview(a, 'admSelAPreview'));
+  b.addEventListener('change', () => updateTeamPreview(b, 'admSelBPreview'));
+}
+
+// cria o contêiner do preview se não existir
+function ensureTeamPreviewForSelect(selectEl, previewId){
+  const parent = selectEl.parentElement || selectEl;
+  let pv = document.getElementById(previewId);
+  if (!pv){
+    pv = document.createElement('div');
+    pv.id = previewId;
+    pv.className = 'team-preview';
+    parent.appendChild(pv);
+  }
+}
+
+// atualiza conteúdo "Logo + Nome"
+function updateTeamPreview(selectEl, previewId){
+  const pv = document.getElementById(previewId);
+  if (!pv) return;
+
+  const id = parseInt(selectEl.value || '0', 10);
+  const t = teamsById.get(id);
+  pv.innerHTML = '';
+
+  if (!id || !t){
+    pv.classList.add('hidden');
+    return;
+  }
+  pv.classList.remove('hidden');
+
+  const av = document.createElement('div');
+  av.className = 'avatar-sm';
+  if (t.logo){
+    const img = document.createElement('img');
+    img.src = t.logo; img.alt = t.name || '';
+    av.appendChild(img);
+  } else {
+    av.textContent = initials(t.name || '');
+  }
+
+  const name = document.createElement('span');
+  name.className = 'name';
+  name.textContent = t.name || `#${id}`;
+
+  pv.appendChild(av);
+  pv.appendChild(name);
+}
+  
 
   async function populateAdminTournaments(){
   const sel = document.getElementById('admTournament');
