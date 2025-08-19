@@ -48,6 +48,69 @@
         radial-gradient(900px 600px at 110% 10%, color-mix(in oklab, #22d3ee 14%, transparent), transparent 40%),
         linear-gradient(180deg, color-mix(in oklab, var(--bg) 92%, transparent), var(--bg));
     }
+    /* ===== Motion utilities ===== */
+  :root{
+    --motion-fast: .18s;
+    --motion-med: .24s;
+    --ease: cubic-bezier(.2,.7,.2,1);
+  }
+
+  /* Abas (views) */
+  .view{
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity var(--motion-med) var(--ease), transform var(--motion-med) var(--ease);
+  }
+  .view.anim-exit{ opacity:0; transform: translateY(8px); }
+  .view.anim-enter{ opacity:0; transform: translateY(8px); }
+
+  /* Modal */
+  .modal-backdrop{
+    opacity: 0;
+    transition: opacity var(--motion-med) var(--ease);
+  }
+  .modal-backdrop.show{ opacity: 1; }
+  .modal{
+    transform: translateY(8px) scale(.98);
+    opacity: 0;
+    transition: transform var(--motion-med) var(--ease), opacity var(--motion-med) var(--ease);
+  }
+  .modal-backdrop.show .modal{
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+
+  /* Bottom sheet (aposta) */
+  .sheet{
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--motion-med) var(--ease);
+  }
+  .sheet.show{
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .sheet .sheet-panel{
+    transform: translateY(16px);
+    transition: transform var(--motion-med) var(--ease);
+  }
+  .sheet.show .sheet-panel{
+    transform: translateY(0);
+  }
+
+  /* Micro-interação nas odds */
+  @keyframes pop{ 0%{transform:scale(1)} 60%{transform:scale(1.06)} 100%{transform:scale(1)} }
+  .oddbtn.pop{ animation: pop var(--motion-fast) ease-out; }
+
+  /* Entrada suave dos cards */
+  @keyframes fadeUp { from{ opacity:0; transform: translateY(10px) } to{ opacity:1; transform: translateY(0) } }
+  .surface.match-card.appear{ animation: fadeUp var(--motion-med) var(--ease) both; }
+
+  /* Acessibilidade */
+  @media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important }
+  }
+
 
     /* Layout */
     header{
@@ -222,10 +285,12 @@
     <!-- APP -->
     <section id="app" class="hidden">
       <nav class="dock">
-        <button class="tab-btn" data-tab="jogos" aria-selected="true">Fazer apostas</button>
-        <button class="tab-btn" data-tab="bets">Minhas apostas</button>
-        <button class="tab-btn" data-tab="leaderboard">Leaderboard</button>
-        <button id="adminTabBtn" class="tab-btn hidden" data-tab="admin">Admin</button>
+        <!-- Navegação -->
+        <button class="tab-btn" type="button" data-tab="jogos" aria-selected="true">Fazer apostas</button>
+        <button class="tab-btn" type="button" data-tab="bets">Minhas apostas</button>
+        <button class="tab-btn" type="button" data-tab="leaderboard">Leaderboard</button>
+        <button id="adminTabBtn" class="tab-btn hidden" type="button" data-tab="admin">Admin</button>
+
       </nav>
 
       <!-- Jogos -->
@@ -285,7 +350,7 @@
             <label>Odd A<br><input id="admOddA" type="number" step="0.01" value="2.00"></label>
             <label>Odd B<br><input id="admOddB" type="number" step="0.01" value="1.80"></label>
           </div>
-          <div style="display:flex; gap:8px; margin-top:10px"><button id="admCreate" class="btn primary">Criar</button><span id="admMsg" class="muted"></span></div>
+          <div style="display:flex; gap:8px; margin-top:10px"><button id="admCreate" class="btn primary" type="button">Criar</button><span id="admMsg" class="muted"></span></div>
         </div>
         <div class="surface card">
           <h3 style="margin-top:0">Encerrar / Anular jogos</h3>
@@ -552,12 +617,40 @@ function toISOInBRT(ymdHm) {
     // =====================
     document.querySelectorAll('.tab-btn').forEach(btn => { btn.addEventListener('click', () => switchTab(btn.dataset.tab, btn)); });
     function switchTab(tab, btn){
-      document.querySelectorAll('.tab-btn').forEach(b => b.setAttribute('aria-selected', String(b===btn)));
-      ['jogos','bets','leaderboard','admin'].forEach(t => {
-        const el = document.querySelector('#tab-'+t);
-        if (el) el.classList.toggle('hidden', t !== tab);
+  const to = document.querySelector('#tab-'+tab);
+  if (!to) return;
+
+  const panels = ['jogos','bets','leaderboard','admin'].map(t=>document.querySelector('#tab-'+t)).filter(Boolean);
+  const from = panels.find(el => !el.classList.contains('hidden'));
+
+  document.querySelectorAll('.tab-btn').forEach(b => b.setAttribute('aria-selected', String(b===btn)));
+  if (from === to) return;
+
+  // entra
+  to.classList.remove('hidden');
+  to.classList.add('anim-enter');
+  requestAnimationFrame(() => {
+    to.classList.remove('anim-enter'); // transiciona para o estado normal
+  });
+
+  // sai
+  if (from){
+    from.classList.add('anim-exit');
+    from.addEventListener('transitionend', function onExit(e){
+      if (e.target !== from) return;
+      from.removeEventListener('transitionend', onExit);
+      from.classList.remove('anim-exit');
+      from.classList.add('hidden');
+    });
+  }
+}
+
+    (function tagTabsAsViews(){
+      ['jogos','bets','leaderboard','admin'].forEach(t=>{
+        const el = document.getElementById('tab-'+t);
+        if (el && !el.classList.contains('view')) el.classList.add('view');
       });
-    }
+    })();
 
     function bindFilterListeners(){
       if (filtersBound) return;
@@ -738,6 +831,8 @@ function toISOInBRT(ymdHm) {
 
   const wrapper = document.createElement('div');
   wrapper.className = 'surface match-card';
+  wrapper.classList.add('appear');
+
 
   // ---------- Header ----------
   const head = document.createElement('div'); head.className = 'match-head';
@@ -800,6 +895,12 @@ if (closed) oddA.disabled = true;
 const sep = document.createElement('span'); sep.textContent = 'x';
 const oddB = document.createElement('button'); oddB.className = 'oddbtn'; oddB.textContent = Number(m.odd_b).toFixed(2);
 if (closed) oddB.disabled = true;
+[oddA, oddB].forEach(btn => {
+  btn.addEventListener('click', () => {
+    btn.classList.add('pop');
+    btn.addEventListener('animationend', () => btn.classList.remove('pop'), { once: true });
+  });
+});
 
 let stakeLeft = 0, stakeRight = 0;
 if (opts.forBetList && opts.bet) {
@@ -1035,13 +1136,20 @@ function renderMatches(){
   document.getElementById('betError').classList.add('hidden');
   document.getElementById('betError').textContent = '';
   document.getElementById('betSheet').classList.remove('hidden');
+  requestAnimationFrame(()=> document.getElementById('betSheet').classList.add('show'));
+
 
   validateStake();
   stakeEl.focus();
   stakeEl.onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); confirmBet(); } };
 }    
 
-    function closeBetSheet(){ document.getElementById('betSheet').classList.add('hidden'); betCtx = null; }
+    function closeBetSheet(){
+  const sh = document.getElementById('betSheet');
+  sh.classList.remove('show');
+  const done = () => { sh.classList.add('hidden'); sh.removeEventListener('transitionend', done); betCtx = null; };
+  sh.addEventListener('transitionend', done);
+}
     document.getElementById('betSheet').addEventListener('click', (e) => { if (e.target.id === 'betSheet') closeBetSheet(); });
     document.getElementById('betCancel').addEventListener('click', closeBetSheet);
     document.getElementById('betSheetClose').addEventListener('click', closeBetSheet);
@@ -1229,63 +1337,147 @@ document.getElementById('betSlider').addEventListener('input', ()=>{
     // =====================
     // ADMIN
     // =====================
-    async function populateAdminTeamSelects(){
-      const a = document.getElementById('admSelA'); const b = document.getElementById('admSelB');
-      if (!a || !b) return;
-      const makeOpts = () => {
-        const frag = document.createDocumentFragment();
-        const opt0 = document.createElement('option'); opt0.value=''; opt0.textContent='Selecione...'; frag.appendChild(opt0);
-        for (const t of teams){
-          const o = document.createElement('option');
-          o.value = String(t.id);
-          o.textContent = `${t.tag ? '['+t.tag+'] ' : ''}${t.name} - ${t.university || ''}`;
-          frag.appendChild(o);
-        }
-        return frag;
-      };
-      a.innerHTML=''; b.innerHTML='';
-      a.appendChild(makeOpts()); b.appendChild(makeOpts());
-    }
+    // --- Persistência simples do formulário Admin ---
+const ADM_FORM_KEY = 'admFormStateV1';
 
-    async function populateAdminTournaments(){
-      const sel = document.getElementById('admTournament');
-      if (!sel) return;
-      sel.innerHTML = '';
-      const opt0 = document.createElement('option'); opt0.value=''; opt0.textContent='Selecione...'; sel.appendChild(opt0);
-      for (const t of tournaments){
-        const o = document.createElement('option');
-        o.value = String(t.id);
-        o.textContent = t.name;
-        sel.appendChild(o);
-      }
+function getAdmEls(){
+  return {
+    a: document.getElementById('admSelA'),
+    b: document.getElementById('admSelB'),
+    t: document.getElementById('admTournament'),
+    start: document.getElementById('admStart'),
+    oa: document.getElementById('admOddA'),
+    ob: document.getElementById('admOddB'),
+  };
+}
+
+function saveAdmForm(){
+  const { a,b,t,start,oa,ob } = getAdmEls();
+  const state = {
+    a: a?.value ?? '',
+    b: b?.value ?? '',
+    t: t?.value ?? '',
+    start: start?.value ?? '',
+    oa: oa?.value ?? '',
+    ob: ob?.value ?? '',
+  };
+  localStorage.setItem(ADM_FORM_KEY, JSON.stringify(state));
+}
+
+function restoreAdmForm(){
+  try{
+    const st = JSON.parse(localStorage.getItem(ADM_FORM_KEY) || '{}');
+    const { a,b,t,start,oa,ob } = getAdmEls();
+    if (a && st.a !== undefined) a.value = st.a;
+    if (b && st.b !== undefined) b.value = st.b;
+    if (t && st.t !== undefined) t.value = st.t;
+    if (start && st.start !== undefined) {
+      start.value = st.start;
+      // atualiza o “hint” do horário
+      start.dispatchEvent(new Event('input'));
     }
+    if (oa && st.oa !== undefined) oa.value = st.oa;
+    if (ob && st.ob !== undefined) ob.value = st.ob;
+  }catch{}
+}
+
+// liga os eventos de salvar sempre que digitar/mudar algo
+(function bindAdmFormPersistence(){
+  const { a,b,t,start,oa,ob } = getAdmEls();
+  [a,b,t,start,oa,ob].forEach(el => {
+    if (!el) return;
+    el.addEventListener('input', saveAdmForm);
+    el.addEventListener('change', saveAdmForm);
+  });
+})();
+
+
+    async function populateAdminTeamSelects(){
+  const a = document.getElementById('admSelA'); const b = document.getElementById('admSelB');
+  if (!a || !b) return;
+
+  // preserva seleção atual
+  const prevA = a.value, prevB = b.value;
+
+  const makeOpts = () => {
+    const frag = document.createDocumentFragment();
+    const opt0 = document.createElement('option'); opt0.value=''; opt0.textContent='Selecione...'; frag.appendChild(opt0);
+    for (const t of teams){
+      const o = document.createElement('option');
+      o.value = String(t.id);
+      o.textContent = `${t.tag ? '['+t.tag+'] ' : ''}${t.name} - ${t.university || ''}`;
+      frag.appendChild(o);
+    }
+    return frag;
+  };
+
+  a.innerHTML=''; b.innerHTML='';
+  a.appendChild(makeOpts()); b.appendChild(makeOpts());
+
+  // tenta restaurar seleção anterior
+  if (prevA) a.value = prevA;
+  if (prevB) b.value = prevB;
+
+  // e também aplica o que estiver salvo no localStorage
+  restoreAdmForm();
+}    
+
+  async function populateAdminTournaments(){
+  const sel = document.getElementById('admTournament');
+  if (!sel) return;
+
+  const prev = sel.value; // preserva seleção atual
+  sel.innerHTML = '';
+
+  const opt0 = document.createElement('option'); opt0.value=''; opt0.textContent='Selecione...'; sel.appendChild(opt0);
+  for (const t of tournaments){
+    const o = document.createElement('option');
+    o.value = String(t.id);
+    o.textContent = t.name;
+    sel.appendChild(o);
+  }
+
+  if (prev) sel.value = prev;
+
+  // aplica estado salvo, se houver (útil no primeiro load)
+  restoreAdmForm();
+}    
 
     document.getElementById('admCreate').addEventListener('click', async () => {
-      const selA = document.getElementById('admSelA'); const selB = document.getElementById('admSelB');
-      const selT = document.getElementById('admTournament');
-      const idA = parseInt(selA.value || '0'); const idB = parseInt(selB.value || '0');
-      const tId = parseInt(selT.value || '0');
-      const startLocal = document.getElementById('admStart').value; // 'YYYY-MM-DDTHH:mm'
-      const odd_a = parseFloat(document.getElementById('admOddA').value||'0');
-      const odd_b = parseFloat(document.getElementById('admOddB').value||'0');
-      if(!idA||!idB||idA===idB||!tId||!startLocal||odd_a<1||odd_b<1){ document.getElementById('admMsg').textContent='Preencha todos os campos.'; return; }
-      const teamA = teamsById.get(idA); const teamB = teamsById.get(idB);
-      const tour = tournamentsById.get(tId);
-      const team_a = teamA?.name || 'Time A'; const team_b = teamB?.name || 'Time B';
-      document.getElementById('admMsg').textContent = 'Criando...';
-      const payload = {
-        team_a, team_b,
-        api_team_a_id: idA, api_team_b_id: idB,
-        api_tournament_id: tId,
-        tournament_name: tour?.name || null,
-        tournament_logo: tour?.logo || null,
-        start_time: toISOInBRT(startLocal),
-        odd_a, odd_b, status:'open'
-      };
-      const { error } = await supabase.from('matches').insert(payload);
-      document.getElementById('admMsg').textContent = error ? 'Erro: '+error.message : 'Criado!';
-      if (!error) { await loadMatches(); await loadAdminMatches(); }
-    });
+  const selA = document.getElementById('admSelA'); const selB = document.getElementById('admSelB');
+  const selT = document.getElementById('admTournament');
+  const idA = parseInt(selA.value || '0'); const idB = parseInt(selB.value || '0');
+  const tId = parseInt(selT.value || '0');
+  const startLocal = document.getElementById('admStart').value; // 'YYYY-MM-DDTHH:mm'
+  const odd_a = parseFloat(document.getElementById('admOddA').value||'0');
+  const odd_b = parseFloat(document.getElementById('admOddB').value||'0');
+  if(!idA||!idB||idA===idB||!tId||!startLocal||odd_a<1||odd_b<1){ document.getElementById('admMsg').textContent='Preencha todos os campos.'; return; }
+
+  const teamA = teamsById.get(idA); const teamB = teamsById.get(idB);
+  const tour = tournamentsById.get(tId);
+  const team_a = teamA?.name || 'Time A'; const team_b = teamB?.name || 'Time B';
+       document.getElementById('admMsg').textContent = 'Criando...';
+
+  const payload = {
+    team_a, team_b,
+    api_team_a_id: idA, api_team_b_id: idB,
+    api_tournament_id: tId,
+    tournament_name: tour?.name || null,
+    tournament_logo: tour?.logo || null,
+    start_time: toISOInBRT(startLocal),
+    odd_a, odd_b, status:'open'
+  };
+
+  const { error } = await supabase.from('matches').insert(payload);
+  document.getElementById('admMsg').textContent = error ? 'Erro: '+error.message : 'Criado!';
+
+  if (!error) {
+    // garante que o estado permaneça salvo
+    saveAdmForm();
+    await loadMatches();
+    await loadAdminMatches();
+  }
+});
 
     async function loadAdminMatches(){
       const { data, error } = await supabase.from('matches')
@@ -1403,8 +1595,17 @@ document.getElementById('betSlider').addEventListener('input', ()=>{
     // =====================
     // TEAM MODAL
     // =====================
-    function openModal(){ document.getElementById('modalBackdrop').classList.remove('hidden'); }
-    function closeModal(){ document.getElementById('modalBackdrop').classList.add('hidden'); }
+    function openModal(){
+  const bd = document.getElementById('modalBackdrop');
+  bd.classList.remove('hidden');
+  requestAnimationFrame(()=> bd.classList.add('show'));
+    }
+    function closeModal(){
+      const bd = document.getElementById('modalBackdrop');
+      bd.classList.remove('show');
+      const done = () => { bd.classList.add('hidden'); bd.removeEventListener('transitionend', done); };
+      bd.addEventListener('transitionend', done);
+    }
     document.getElementById('modalClose').addEventListener('click', closeModal);
     document.getElementById('modalClose2').addEventListener('click', closeModal);
     document.getElementById('modalBackdrop').addEventListener('click', (e) => { if (e.target.id === 'modalBackdrop') closeModal(); });
