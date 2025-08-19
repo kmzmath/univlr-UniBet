@@ -238,7 +238,7 @@
           <div id="favBar" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px"></div>
           <div class="grid-3">
             <label>Campeonato<br><select id="fltTournament"></select></label>
-            <label>Data<br><input id="fltDate" type="date"></label>
+            <label>Data<br><input id="fltDate" type="date" lang="pt-BR"></label>
             <div style="display:flex; align-items:end; gap:8px">
               <button id="fltClear" class="btn">Limpar</button>
             </div>
@@ -281,7 +281,7 @@
             <label>Campeonato<br><select id="admTournament"></select></label>
           </div>
           <div class="grid-3" style="margin-top:8px">
-            <label>Início (data-hora)<br><input id="admStart" type="datetime-local"></label>
+            <label>Início (data-hora)<br><input id="admStart" type="datetime-local" lang="pt-BR"></label>
             <label>Odd A<br><input id="admOddA" type="number" step="0.01" value="2.00"></label>
             <label>Odd B<br><input id="admOddB" type="number" step="0.01" value="1.80"></label>
           </div>
@@ -369,18 +369,34 @@
     // UTIL
     // =====================
     // Fuso horário fixo (Brasília)
-    const TZ = 'America/Sao_Paulo';
-    const fmtMoney = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    const fmtDate = (iso) =>
-      new Intl.DateTimeFormat('pt-BR', {
-        timeZone: TZ,
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-      }).format(new Date(iso));
+const TZ = 'America/Sao_Paulo';
+const fmtMoney = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+// evita “voltar um dia” quando vier só 'YYYY-MM-DD'
+function toDateSafe(x){
+  if (typeof x === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(x)) {
+    const [y,m,d] = x.split('-').map(Number);
+    return new Date(Date.UTC(y, m-1, d, 12, 0)); // meio-dia UTC
+  }
+  return new Date(x);
+}
+
+const fmtDate = (iso) =>
+  new Intl.DateTimeFormat('pt-BR', {
+    timeZone: TZ,
+    day: '2-digit', month: '2-digit', year: 'numeric',
+    hour: '2-digit', minute: '2-digit', hour12: false,
+  }).format(toDateSafe(iso));
+
+function toISOInBRT(ymdHm) {
+  if (!ymdHm) return null;
+  const [d, t = '00:00'] = ymdHm.split('T');
+  const [y, m, dd] = d.split('-').map(Number);
+  const [hh, mm] = t.split(':').map(Number);
+  // BRT = UTC-03:00  →  UTC = local + 3h
+  const utcMs = Date.UTC(y, m - 1, dd, hh + 3, mm);
+  return new Date(utcMs).toISOString();
+}
     const $ = (q) => document.querySelector(q);
     function toast(msg, isErr=false){ const t = $('#toast'); t.textContent = msg; t.classList.remove('hidden'); t.classList.toggle('err', !!isErr); setTimeout(() => t.classList.add('hidden'), 3200); }
     function setOnline(on){ $('#statusDot').style.background = on ? '#10b981' : '#f59e0b'; $('#statusText').textContent = on ? 'conectado' : 'offline'; }
@@ -680,9 +696,11 @@
       const nowIso = new Date().toISOString();
       let q = supabase.from('matches').select('*').in('status', ['open','live']);
       if (filterDate){
-        const start = new Date(filterDate + 'T00:00:00');
-        const end = new Date(start.getTime() + 24*60*60*1000);
-        q = q.gte('start_time', start.toISOString()).lt('start_time', end.toISOString());
+        const startIso = toISOInBRT(filterDate + 'T00:00');
+        const startDateUtc = new Date(startIso);
+        const endDateUtc = new Date(startDateUtc.getTime() + 24*60*60*1000); // +1 dia em Brasília
+        q = q.gte('start_time', startDateUtc.toISOString())
+              .lt('start_time', endDateUtc.toISOString());
       } else {
         q = q.gte('start_time', nowIso);
       }
@@ -1247,10 +1265,10 @@ document.getElementById('betSlider').addEventListener('input', ()=>{
       const selT = document.getElementById('admTournament');
       const idA = parseInt(selA.value || '0'); const idB = parseInt(selB.value || '0');
       const tId = parseInt(selT.value || '0');
-      const start = document.getElementById('admStart').value;
+      const startLocal = document.getElementById('admStart').value; // 'YYYY-MM-DDTHH:mm'
       const odd_a = parseFloat(document.getElementById('admOddA').value||'0');
       const odd_b = parseFloat(document.getElementById('admOddB').value||'0');
-      if(!idA||!idB||idA===idB||!tId||!start||odd_a<1||odd_b<1){ document.getElementById('admMsg').textContent='Preencha todos os campos.'; return; }
+      if(!idA||!idB||idA===idB||!tId||!startLocal||odd_a<1||odd_b<1){ document.getElementById('admMsg').textContent='Preencha todos os campos.'; return; }
       const teamA = teamsById.get(idA); const teamB = teamsById.get(idB);
       const tour = tournamentsById.get(tId);
       const team_a = teamA?.name || 'Time A'; const team_b = teamB?.name || 'Time B';
@@ -1261,7 +1279,7 @@ document.getElementById('betSlider').addEventListener('input', ()=>{
         api_tournament_id: tId,
         tournament_name: tour?.name || null,
         tournament_logo: tour?.logo || null,
-        start_time: new Date(start).toISOString(),
+        start_time: toISOInBRT(startLocal),
         odd_a, odd_b, status:'open'
       };
       const { error } = await supabase.from('matches').insert(payload);
@@ -1344,7 +1362,7 @@ document.getElementById('betSlider').addEventListener('input', ()=>{
     }
     async function updateMatchStart(id, dtLocal){
       try{
-        const iso = new Date(dtLocal).toISOString();
+        const iso = toISOInBRT(dtLocal);
         const { error } = await supabase.from('matches').update({ start_time: iso }).eq('id', id);
         if (error) throw error;
         toast('Horário atualizado');
@@ -1513,7 +1531,22 @@ document.getElementById('betSlider').addEventListener('input', ()=>{
       }
     })();
 
-    // Init
+    (function attachAdmStartPreview(){
+      const admStartEl = document.getElementById('admStart');
+      if (!admStartEl) return;
+      const hint = document.createElement('small');
+      hint.className = 'muted';
+      admStartEl.parentElement.appendChild(hint);
+      const upd = () => {
+  if (!admStartEl.value) { hint.textContent = ''; return; }
+  const iso = toISOInBRT(admStartEl.value); // o que será salvo (UTC/Z)
+  hint.textContent = `→ Salva: ${iso} • Mostra: ${fmtDate(iso)} (BRT)`;
+};
+      admStartEl.addEventListener('input', upd);
+      upd();
+    })();
+
+    // Init 
     refreshSession();
     document.addEventListener('visibilitychange', ()=>{ if (!document.hidden) { loadMatches(); } });
   </script>
