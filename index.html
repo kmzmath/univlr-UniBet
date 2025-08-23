@@ -282,6 +282,7 @@
           <label>Email<br><input id="siEmail" type="email" required placeholder="voce@email.com"></label><br>
           <label>Senha<br><input id="siPass" type="password" required placeholder="••••••••"></label><br>
           <button class="btn primary wfull" type="submit">Entrar</button>
+          <button class="btn ghost wfull" type="button" id="forgotBtn">Esqueci minha senha</button>
           <div id="siMsg" class="muted" style="margin-top:8px"></div>
         </form>
         <form id="signUpForm" class="surface card">
@@ -443,6 +444,10 @@
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const MAX_PER_MATCH = 10; // teto por partida
+
+    const REDIRECT_TO = (location.origin + location.pathname)
+  .replace(/index\.html?$/,'')
+  .replace(/\/?$/, '/'); // garante barra no final
     // =====================
     // UTIL
     // =====================
@@ -575,7 +580,23 @@ function toISOInBRT(ymdHm) {
       }
     }
 
-    supabase.auth.onAuthStateChange((_e, _sess) => { refreshSession(); });
+    supabase.auth.onAuthStateChange(async (event, _sess) => {
+  // quando o usuário clica no link do e-mail e volta ao seu site
+  if (event === 'PASSWORD_RECOVERY') {
+    try {
+      const newPass = prompt('Digite sua nova senha (mín. 6 caracteres):');
+      if (!newPass) return;
+      const { error } = await supabase.auth.updateUser({ password: newPass });
+      if (error) throw error;
+      toast('Senha alterada com sucesso. Você já está logado.');
+      // opcional: limpar o fragmento da URL (tokens):
+      if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+    } catch (e) {
+      toast('Erro ao redefinir senha: ' + e.message, true);
+    }
+  }
+  refreshSession();
+});
 
     async function checkAdmin(){
       try{
@@ -596,13 +617,16 @@ function toISOInBRT(ymdHm) {
       if (!error) toast('Bem-vindo!');
     });
 
-    $('#signUpForm').addEventListener('submit', async (ev) => {
+    document.getElementById('signUpForm').addEventListener('submit', async (ev) => {
       ev.preventDefault();
       const email = $('#suEmail').value.trim();
       const password = $('#suPass').value.trim();
       const display_name = $('#suName').value.trim();
       $('#suMsg').textContent = 'Criando conta...';
-      const { error } = await supabase.auth.signUp({ email, password, options: { data: { display_name } } });
+      const { error } = await supabase.auth.signUp({
+        email, password,
+        options: { data: { display_name }, emailRedirectTo: REDIRECT_TO }
+      });
       $('#suMsg').textContent = error ? 'Erro: ' + error.message : 'Conta criada! Faça login.';
       if (!error) toast('Conta criada, agora é só entrar.');
     });
@@ -611,6 +635,17 @@ function toISOInBRT(ymdHm) {
       await supabase.auth.signOut();
       session = null; profile = null; myBets = []; matches = [];
       location.reload();
+    });
+
+    // botão "Esqueci minha senha"
+    document.getElementById('forgotBtn').addEventListener('click', async () => {
+      const typed = $('#siEmail').value.trim();
+      const email = typed || prompt('Informe seu e-mail cadastrado:');
+      if (!email) return;
+      $('#siMsg').textContent = 'Enviando link de recuperação...';
+      const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: REDIRECT_TO });
+      $('#siMsg').textContent = error ? 'Erro: ' + error.message : 'Link de recuperação enviado. Verifique seu e-mail.';
+      if (!error) toast('Enviamos um link de recuperação para o seu e-mail.');
     });
 
     async function ensureProfile(){
