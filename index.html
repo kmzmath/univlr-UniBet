@@ -475,10 +475,12 @@
       setOnline(false);
     }
 
-    // Limpa fragmento (#access_token=...) se sobrou de fluxos anteriores
-    (function clearStaleAuthHash(){
+    // Só limpa o hash se NÃO for um retorno válido de auth (recovery/signup/oauth)
+    (function maybeClearStaleAuthHash(){
       const p = new URLSearchParams(location.hash.slice(1));
-      if (p.has('access_token')) {
+      const typ = (p.get('type') || '').toLowerCase();
+      // se vier de fluxos legítimos, mantenha o hash para o Supabase/JS processar
+      if (p.has('access_token') && !typ) {
         history.replaceState(null, '', location.pathname + location.search);
       }
     })();
@@ -488,16 +490,18 @@
       RECOVERY_LOCK = true;
       try{
         const { data: s1 } = await supabase.auth.getSession();
-        if (!s1.session) {
-          const params = new URLSearchParams(location.hash.slice(1));
-          const at = params.get('access_token');
-          const rt = params.get('refresh_token');
-          if (at && rt) {
-            const { error: setErr } = await supabase.auth.setSession({ access_token: at, refresh_token: rt });
-            if (setErr) throw setErr;
+          if (!s1.session) {
+            // tenta ler do hash (#...) ou, se não tiver, da query (?...)
+            const raw = location.hash.slice(1) || location.search.slice(1);
+            const params = new URLSearchParams(raw);
+            const at = params.get('access_token');
+            const rt = params.get('refresh_token');
+            if (at && rt) {
+              const { error: setErr } = await supabase.auth.setSession({ access_token: at, refresh_token: rt });
+              if (setErr) throw setErr;
+            }
           }
-        }
-
+          
         const newPass = prompt('Digite sua nova senha (mín. 6 caracteres):');
         if (!newPass) {
           if (location.hash) history.replaceState(null, '', location.pathname + location.search);
