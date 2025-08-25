@@ -48,7 +48,7 @@
         radial-gradient(900px 600px at 110% 10%, color-mix(in oklab, #22d3ee 14%, transparent), transparent 40%),
         linear-gradient(180deg, color-mix(in oklab, var(--bg) 92%, transparent), var(--bg));
     }
-    /* ===== Motion utilities ===== */
+  /* ===== Motion utilities ===== */
   :root{
     --motion-fast: .18s;
     --motion-med: .24s;
@@ -98,18 +98,18 @@
     transform: translateY(0);
   }
 
-  /* Preview do time ao lado/abaixo do select no Admin */
-.team-preview{
-  display:flex; align-items:center; gap:8px; margin-top:6px;
-}
-.avatar-sm{
-  width:24px; height:24px; border-radius:6px; overflow:hidden;
-  background: linear-gradient(135deg, var(--primary-600), #22d3ee);
-  display:flex; align-items:center; justify-content:center;
-  color:#fff; font-weight:800; font-size:.75rem;
-}
-.avatar-sm img{ width:100%; height:100%; object-fit:cover }
-.team-preview .name{ font-weight:700 }
+  /* Preview time admin */
+  .team-preview{
+    display:flex; align-items:center; gap:8px; margin-top:6px;
+  }
+  .avatar-sm{
+    width:24px; height:24px; border-radius:6px; overflow:hidden;
+    background: linear-gradient(135deg, var(--primary-600), #22d3ee);
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-weight:800; font-size:.75rem;
+  }
+  .avatar-sm img{ width:100%; height:100%; object-fit:cover }
+  .team-preview .name{ font-weight:700 }
 
   /* Micro-interação nas odds */
   @keyframes pop{ 0%{transform:scale(1)} 60%{transform:scale(1.06)} 100%{transform:scale(1)} }
@@ -124,134 +124,132 @@
     *{ animation: none !important; transition: none !important }
   }
 
+  /* Layout */
+  header{
+    position:sticky; top:0; z-index:20;
+    backdrop-filter: blur(10px) saturate(120%);
+    background: color-mix(in oklab, var(--bg) 65%, transparent);
+    border-bottom:1px solid color-mix(in oklab, var(--text) 8%, transparent);
+    padding:12px 16px;
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.2px }
+  .status-pill{
+    display:inline-flex; align-items:center; gap:8px; padding:6px 10px;
+    border-radius:999px; border:1px solid color-mix(in oklab, var(--text) 15%, transparent);
+    background: color-mix(in oklab, var(--bg) 96%, transparent)
+  }
+  .status-dot{ width:8px; height:8px; border-radius:99px; background:#f59e0b }
 
-    /* Layout */
-    header{
-      position:sticky; top:0; z-index:20;
-      backdrop-filter: blur(10px) saturate(120%);
-      background: color-mix(in oklab, var(--bg) 65%, transparent);
-      border-bottom:1px solid color-mix(in oklab, var(--text) 8%, transparent);
-      padding:12px 16px;
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-    }
-    .brand{ display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.2px }
-    .status-pill{
-      display:inline-flex; align-items:center; gap:8px; padding:6px 10px;
-      border-radius:999px; border:1px solid color-mix(in oklab, var(--text) 15%, transparent);
-      background: color-mix(in oklab, var(--bg) 96%, transparent)
-    }
-    .status-dot{ width:8px; height:8px; border-radius:99px; background:#f59e0b }
+  main{ max-width:1150px; margin-inline:auto; padding:16px }
+  .dock{ display:flex; gap:16px; margin-bottom:14px; border-bottom:1px solid color-mix(in oklab, var(--text) 10%, transparent) }
+  .tab-btn{ cursor:pointer; border-radius:12px 12px 0 0; padding:10px 14px; border:0; background:transparent; font-weight:600; color:var(--muted) }
+  .tab-btn[aria-selected="true"]{ color:var(--primary-600); border-bottom:2px solid var(--primary-600) }
+  .hidden{ display:none !important }
+  .mono{ font-variant-numeric: tabular-nums; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace }
+  .muted{ color: var(--muted) }
+  .nowrap{ white-space:nowrap }
+  .wfull{ width:100% }
 
-    main{ max-width:1150px; margin-inline:auto; padding:16px }
-    .dock{ display:flex; gap:16px; margin-bottom:14px; border-bottom:1px solid color-mix(in oklab, var(--text) 10%, transparent) }
-    .tab-btn{ cursor:pointer; border-radius:12px 12px 0 0; padding:10px 14px; border:0; background:transparent; font-weight:600; color:var(--muted) }
-    .tab-btn[aria-selected="true"]{ color:var(--primary-600); border-bottom:2px solid var(--primary-600) }
-    .hidden{ display:none !important }
-    .mono{ font-variant-numeric: tabular-nums; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace }
-    .muted{ color: var(--muted) }
-    .nowrap{ white-space:nowrap }
-    .wfull{ width:100% }
+  /* Cards & controls */
+  @keyframes blinkUp { 0%{ box-shadow: 0 0 0 0 rgba(16,185,129,.6)} 100%{ box-shadow: 0 0 0 8px rgba(16,185,129,0)} }
+  @keyframes blinkDown { 0%{ box-shadow: 0 0 0 0 rgba(239,68,68,.6)} 100%{ box-shadow: 0 0 0 8px rgba(239,68,68,0)} }
+  .blink-up{ animation: blinkUp .7s ease-out }
+  .blink-down{ animation: blinkDown .7s ease-out }
 
-    /* Cards & controls */
-    @keyframes slideUp { from{ transform: translateY(16px); opacity:0 } to { transform: translateY(0); opacity:1 } }
-    @keyframes blinkUp { 0%{ box-shadow: 0 0 0 0 rgba(16,185,129,.6)} 100%{ box-shadow: 0 0 0 8px rgba(16,185,129,0)} }
-    @keyframes blinkDown { 0%{ box-shadow: 0 0 0 0 rgba(239,68,68,.6)} 100%{ box-shadow: 0 0 0 8px rgba(239,68,68,0)} }
-    .blink-up{ animation: blinkUp .7s ease-out }
-    .blink-down{ animation: blinkDown .7s ease-out }
+  .surface{ transition: transform .18s ease, box-shadow .2s ease; border:1px solid color-mix(in oklab, var(--text) 10%, transparent); background: color-mix(in oklab, var(--bg) 92%, transparent); border-radius:18px; box-shadow: 0 8px 30px rgba(0,0,0,.05) }
+  .card{ padding:16px } .surface:hover{ transform: translateY(-2px); box-shadow: 0 12px 35px rgba(0,0,0,.08) }
+  .btn{ cursor:pointer; border-radius:12px; padding:10px 14px; border:1px solid color-mix(in oklab, var(--text) 15%, transparent); background: color-mix(in oklab, var(--primary) 12%, var(--bg)); color: var(--text); transition:.15s ease-in-out transform }
+  .btn:hover{ transform: translateY(-1px) }
+  .btn.primary{ background: linear-gradient(180deg, var(--primary), var(--primary-700)); color:white; border-color: var(--primary-600) }
+  .btn.ghost{ background:transparent }
+  .btn.danger{ background: linear-gradient(180deg, #f87171, #ef4444); border-color:#ef4444; color:#fff }
+  .btn:disabled{ opacity:.6; cursor:not-allowed }
+  input, select{
+    border:1px solid color-mix(in oklab, var(--text) 15%, transparent);
+    border-radius:12px; padding:10px 12px; background: color-mix(in oklab, var(--bg) 98%, transparent); color:var(--text);
+    width:100%;
+  }
+  label{ font-weight:600; font-size:.95rem; display:block }
 
-    .surface{ transition: transform .18s ease, box-shadow .2s ease; border:1px solid color-mix(in oklab, var(--text) 10%, transparent); background: color-mix(in oklab, var(--bg) 92%, transparent); border-radius:18px; box-shadow: 0 8px 30px rgba(0,0,0,.05) }
-    .card{ padding:16px } .surface:hover{ transform: translateY(-2px); box-shadow: 0 12px 35px rgba(0,0,0,.08) }
-    .btn{ cursor:pointer; border-radius:12px; padding:10px 14px; border:1px solid color-mix(in oklab, var(--text) 15%, transparent); background: color-mix(in oklab, var(--primary) 12%, var(--bg)); color: var(--text); transition:.15s ease-in-out transform }
-    .btn:hover{ transform: translateY(-1px) }
-    .btn.primary{ background: linear-gradient(180deg, var(--primary), var(--primary-700)); color:white; border-color: var(--primary-600) }
-    .btn.ghost{ background:transparent }
-    .btn.danger{ background: linear-gradient(180deg, #f87171, #ef4444); border-color:#ef4444; color:#fff }
-    .btn:disabled{ opacity:.6; cursor:not-allowed }
-    input, select{
-      border:1px solid color-mix(in oklab, var(--text) 15%, transparent);
-      border-radius:12px; padding:10px 12px; background: color-mix(in oklab, var(--bg) 98%, transparent); color:var(--text);
-      width:100%;
-    }
-    label{ font-weight:600; font-size:.95rem; display:block }
+  /* Toast */
+  .toast{ position: fixed; right:16px; bottom:16px; max-width: min(420px, 90vw); padding:12px 14px; border-radius:12px; background: color-mix(in oklab, var(--success) 22%, var(--bg)); border:1px solid color-mix(in oklab, var(--success) 35%, transparent) }
+  .toast.err{ background: color-mix(in oklab, var(--danger) 22%, var(--bg)); border-color: color-mix(in oklab, var(--danger) 35%, transparent) }
 
-    /* Toast */
-    .toast{ position: fixed; right:16px; bottom:16px; max-width: min(420px, 90vw); padding:12px 14px; border-radius:12px; background: color-mix(in oklab, var(--success) 22%, var(--bg)); border:1px solid color-mix(in oklab, var(--success) 35%, transparent) }
-    .toast.err{ background: color-mix(in oklab, var(--danger) 22%, var(--bg)); border-color: color-mix(in oklab, var(--danger) 35%, transparent) }
+  /* Auth */
+  .grid-2{ display:grid; grid-template-columns: 1fr 1fr; gap:16px }
+  .grid-3{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:16px }
+  @media (max-width: 900px){
+    .grid-2, .grid-3{ grid-template-columns: 1fr }
+  }
 
-    /* Auth */
-    .grid-2{ display:grid; grid-template-columns: 1fr 1fr; gap:16px }
-    .grid-3{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:16px }
-    @media (max-width: 900px){
-      .grid-2, .grid-3{ grid-template-columns: 1fr }
-    }
+  /* Matches */
+  .match-card{ display:grid; gap:10px; padding:14px }
+  .match-head{ display:flex; justify-content:space-between; align-items:center; font-size:.95rem }
+  .match-tournament{ font-weight:700; display:flex; align-items:center; gap:8px }
+  .match-tournament img{ width:18px; height:18px; border-radius:4px; object-fit:cover }
+  .match-main{ display:grid; grid-template-columns: 1fr auto 1fr; gap:14px; align-items:center }
+  .team-col{ display:grid; grid-template-columns: auto 1fr; gap:10px; align-items:center; min-width:0; cursor:pointer }
+  .team-col.right{ grid-template-columns: 1fr auto; justify-content:flex-end; text-align:right }
+  .team-logo{ width:58px; height:58px; border-radius:14px; overflow:hidden; background: linear-gradient(135deg, var(--primary-600), #22d3ee); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800 }
+  .team-logo img{ width:100%; height:100%; object-fit:cover }
+  .team-text{ display:flex; flex-direction:column; min-width:0 }
+  .team-title{ font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:.2px }
+  .team-sub{ font-size:.88rem; opacity:.8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+  .odds-box{ display:flex; flex-direction:column; align-items:center; gap:10px; min-width:190px }
+  .odds-line{ display:flex; align-items:center; gap:12px; font-weight:800 }
+  .stake-ind{ font-weight:800; color: var(--success); }
+  .oddbtn{ transition: transform .12s ease, box-shadow .12s ease; padding:10px 14px; border-radius:12px; border:1px solid color-mix(in oklab, var(--text) 15%, transparent); background: color-mix(in oklab, var(--primary) 10%, var(--bg)); cursor:pointer; box-shadow: 0 2px 0 color-mix(in oklab, var(--primary) 25%, transparent) }
+  .oddbtn:hover{ transform: translateY(-1px) }
+  .oddbtn.selected{ outline: 2px solid var(--primary-600) }
+  .match-players{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; opacity:.95 }
+  .players-list{ display:flex; flex-wrap:wrap; gap:6px }
+  .player-chip{ padding:4px 10px; border-radius:999px; border:1px solid color-mix(in oklab, var(--text) 15%, transparent); font-size:.86rem; background: color-mix(in oklab, var(--bg) 96%, transparent) }
 
-    /* Matches */
-    .match-card{ display:grid; gap:10px; padding:14px }
-    .match-head{ display:flex; justify-content:space-between; align-items:center; font-size:.95rem }
-    .match-tournament{ font-weight:700; display:flex; align-items:center; gap:8px }
-    .match-tournament img{ width:18px; height:18px; border-radius:4px; object-fit:cover }
-    .match-main{ display:grid; grid-template-columns: 1fr auto 1fr; gap:14px; align-items:center }
-    .team-col{ display:grid; grid-template-columns: auto 1fr; gap:10px; align-items:center; min-width:0; cursor:pointer }
-    .team-col.right{ grid-template-columns: 1fr auto; justify-content:flex-end; text-align:right }
-    .team-logo{ width:58px; height:58px; border-radius:14px; overflow:hidden; background: linear-gradient(135deg, var(--primary-600), #22d3ee); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800 }
-    .team-logo img{ width:100%; height:100%; object-fit:cover }
-    .team-text{ display:flex; flex-direction:column; min-width:0 }
-    .team-title{ font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:.2px }
-    .team-sub{ font-size:.88rem; opacity:.8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
-    .odds-box{ display:flex; flex-direction:column; align-items:center; gap:10px; min-width:190px }
-    .odds-line{ display:flex; align-items:center; gap:12px; font-weight:800 }
-    .stake-ind{ font-weight:800; color: var(--success); }
-    .oddbtn{ transition: transform .12s ease, box-shadow .12s ease; padding:10px 14px; border-radius:12px; border:1px solid color-mix(in oklab, var(--text) 15%, transparent); background: color-mix(in oklab, var(--primary) 10%, var(--bg)); cursor:pointer; box-shadow: 0 2px 0 color-mix(in oklab, var(--primary) 25%, transparent) }
-    .oddbtn:hover{ transform: translateY(-1px) }
-    .oddbtn.selected{ outline: 2px solid var(--primary-600) }
-    .match-players{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; opacity:.95 }
-    .players-list{ display:flex; flex-wrap:wrap; gap:6px }
-    .player-chip{ padding:4px 10px; border-radius:999px; border:1px solid color-mix(in oklab, var(--text) 15%, transparent); font-size:.86rem; background: color-mix(in oklab, var(--bg) 96%, transparent) }
+  /* Modal (team) */
+  .modal-backdrop{ position:fixed; inset:0; background: color-mix(in oklab, var(--bg) 35%, black 40%); display:flex; align-items:center; justify-content:center; padding:20px; z-index:1000 }
+  .modal{ background: color-mix(in oklab, var(--bg) 98%, transparent); color:var(--text); border-radius:18px; width:min(1000px, 96vw); box-shadow: 0 20px 60px rgba(0,0,0,.25); border:1px solid color-mix(in oklab, var(--text) 10%, transparent) }
+  .modal header{ position:sticky; top:0; background:unset; backdrop-filter:none; border-bottom:1px solid color-mix(in oklab, var(--text) 10%, transparent); padding:14px 16px; display:flex; align-items:center; justify-content:space-between }
+  .modal-body{ padding:16px; display:grid; gap:12px }
+  .modal-footer{ padding:12px 16px; border-top:1px solid color-mix(in oklab, var(--text) 10%, transparent); display:flex; justify-content:flex-end }
+  .players-grid{ display:grid; grid-template-columns: repeat(auto-fill,minmax(180px,1fr)); gap:10px; max-height: 240px; overflow:auto; padding-right:4px }
+  .player-card{ border:1px solid color-mix(in oklab, var(--text) 10%, transparent); border-radius:12px; padding:10px; display:flex; align-items:center; gap:10px; background: color-mix(in oklab, var(--bg) 94%, transparent) }
+  .avatar{ width:56px; height:56px; border-radius:12px; overflow:hidden; background: linear-gradient(135deg, var(--primary-600), #22d3ee); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800 }
+  .avatar img{ width:100%; height:100%; object-fit:cover }
+  .matches-list{ display:grid; gap:8px; max-height: 320px; overflow:auto; padding-right:4px }
+  .mini-match{ border:1px dashed color-mix(in oklab, var(--text) 20%, transparent); border-radius:10px; padding:8px 10px; display:grid; gap:4px }
+  .mini-title{ font-weight:700 }
 
-    /* Modal (team) */
-    .modal-backdrop{ position:fixed; inset:0; background: color-mix(in oklab, var(--bg) 35%, black 40%); display:flex; align-items:center; justify-content:center; padding:20px; z-index:1000 }
-    .modal{ background: color-mix(in oklab, var(--bg) 98%, transparent); color:var(--text); border-radius:18px; width:min(1000px, 96vw); box-shadow: 0 20px 60px rgba(0,0,0,.25); border:1px solid color-mix(in oklab, var(--text) 10%, transparent) }
-    .modal header{ position:sticky; top:0; background:unset; backdrop-filter:none; border-bottom:1px solid color-mix(in oklab, var(--text) 10%, transparent); padding:14px 16px; display:flex; align-items:center; justify-content:space-between }
-    .modal-body{ padding:16px; display:grid; gap:12px }
-    .modal-footer{ padding:12px 16px; border-top:1px solid color-mix(in oklab, var(--text) 10%, transparent); display:flex; justify-content:flex-end }
-    .players-grid{ display:grid; grid-template-columns: repeat(auto-fill,minmax(180px,1fr)); gap:10px; max-height: 240px; overflow:auto; padding-right:4px }
-    .player-card{ border:1px solid color-mix(in oklab, var(--text) 10%, transparent); border-radius:12px; padding:10px; display:flex; align-items:center; gap:10px; background: color-mix(in oklab, var(--bg) 94%, transparent) }
-    .avatar{ width:56px; height:56px; border-radius:12px; overflow:hidden; background: linear-gradient(135deg, var(--primary-600), #22d3ee); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800 }
-    .avatar img{ width:100%; height:100%; object-fit:cover }
-    .matches-list{ display:grid; gap:8px; max-height: 320px; overflow:auto; padding-right:4px }
-    .mini-match{ border:1px dashed color-mix(in oklab, var(--text) 20%, transparent); border-radius:10px; padding:8px 10px; display:grid; gap:4px }
-    .mini-title{ font-weight:700 }
+  /* Bet Sheet (confirmation) */
+  .sheet{ position:fixed; inset:0; background: color-mix(in oklab, var(--bg) 30%, black 40%); display:flex; align-items:flex-end; justify-content:center; padding:20px; z-index:1200 }
+  .sheet-panel{ animation: slideUp .18s ease; width:min(700px, 96vw); background: color-mix(in oklab, var(--bg) 98%, transparent); color:var(--text); border-radius:16px; border:1px solid color-mix(in oklab, var(--text) 10%, transparent); box-shadow: 0 20px 60px rgba(0,0,0,.25); overflow:hidden }
+  .sheet header{ display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid color-mix(in oklab, var(--text) 10%, transparent) }
+  .sheet .body{ padding:16px; display:grid; gap:12px }
+  .sheet .footer{ display:flex; justify-content:flex-end; gap:8px; padding:12px 16px; border-top:1px solid color-mix(in oklab, var(--text) 10%, transparent) }
+  .summary{ display:grid; grid-template-columns: 1fr auto 1fr; gap:12px; align-items:center }
+  .sum-team{ display:flex; align-items:center; gap:10px; min-width:0 }
+  .sum-logo{ width:44px; height:44px; border-radius:10px; overflow:hidden; background: linear-gradient(135deg, var(--primary-600), #22d3ee); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800 }
+  .sum-logo img{ width:100%; height:100%; object-fit:cover }
+  .sum-name{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:700 }
+  .sum-odds{ display:flex; align-items:center; gap:8px; font-weight:800 }
+  .inline{ display:flex; align-items:center; gap:10px; flex-wrap:wrap }
+  .kbd{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono"; border:1px solid color-mix(in oklab, var(--text) 20%, transparent); border-bottom-width:2px; border-radius:6px; padding:2px 6px; font-size:.85rem }
 
-    /* Bet Sheet (confirmation) */
-    .sheet{ position:fixed; inset:0; background: color-mix(in oklab, var(--bg) 30%, black 40%); display:flex; align-items:flex-end; justify-content:center; padding:20px; z-index:1200 }
-    .sheet-panel{ animation: slideUp .18s ease; width:min(700px, 96vw); background: color-mix(in oklab, var(--bg) 98%, transparent); color:var(--text); border-radius:16px; border:1px solid color-mix(in oklab, var(--text) 10%, transparent); box-shadow: 0 20px 60px rgba(0,0,0,.25); overflow:hidden }
-    .sheet header{ display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid color-mix(in oklab, var(--text) 10%, transparent) }
-    .sheet .body{ padding:16px; display:grid; gap:12px }
-    .sheet .footer{ display:flex; justify-content:flex-end; gap:8px; padding:12px 16px; border-top:1px solid color-mix(in oklab, var(--text) 10%, transparent) }
-    .summary{ display:grid; grid-template-columns: 1fr auto 1fr; gap:12px; align-items:center }
-    .sum-team{ display:flex; align-items:center; gap:10px; min-width:0 }
-    .sum-logo{ width:44px; height:44px; border-radius:10px; overflow:hidden; background: linear-gradient(135deg, var(--primary-600), #22d3ee); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800 }
-    .sum-logo img{ width:100%; height:100%; object-fit:cover }
-    .sum-name{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:700 }
-    .sum-odds{ display:flex; align-items:center; gap:8px; font-weight:800 }
-    .inline{ display:flex; align-items:center; gap:10px; flex-wrap:wrap }
-    .kbd{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono"; border:1px solid color-mix(in oklab, var(--text) 20%, transparent); border-bottom-width:2px; border-radius:6px; padding:2px 6px; font-size:.85rem }
+  /* Utilities */
+  .center{ display:flex; align-items:center; justify-content:center }
+  .skeleton{ background:linear-gradient(90deg, color-mix(in oklab, var(--text) 6%, var(--bg)) 25%, color-mix(in oklab, var(--text) 12%, var(--bg)) 37%, color-mix(in oklab, var(--text) 6%, var(--bg)) 63%); background-size:400% 100%; animation:shimmer 1.15s infinite; border-radius:8px }
+  @keyframes shimmer{ 0%{background-position:100% 0} 100%{background-position:0 0} }
 
-    /* Utilities */
-    .center{ display:flex; align-items:center; justify-content:center }
-    .skeleton{ background:linear-gradient(90deg, color-mix(in oklab, var(--text) 6%, var(--bg)) 25%, color-mix(in oklab, var(--text) 12%, var(--bg)) 37%, color-mix(in oklab, var(--text) 6%, var(--bg)) 63%); background-size:400% 100%; animation:shimmer 1.15s infinite; border-radius:8px }
-    @keyframes shimmer{ 0%{background-position:100% 0} 100%{background-position:0 0} }
-
-    .chip{ display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px; font-weight:700; font-size:.85rem; border:1px solid transparent }
-    .chip .dot{ width:8px; height:8px; border-radius:50% }
-    .chip.open{ background: color-mix(in oklab, var(--chip-open) 18%, var(--bg)); color: var(--text) }
-    .chip.open .dot{ background: var(--chip-open) }
-    .chip.live{ background: color-mix(in oklab, var(--chip-live) 22%, var(--bg)); color: var(--text) }
-    .chip.live .dot{ background: var(--chip-live) }
-    .chip.finished{ background: color-mix(in oklab, var(--chip-finished) 18%, var(--bg)); color: var(--text) }
-    .chip.finished .dot{ background: var(--chip-finished) }
-    .chip.void{ background: color-mix(in oklab, var(--chip-void) 22%, var(--bg)); color: var(--text) }
-    .chip.void .dot{ background: var(--chip-void) }
+  .chip{ display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px; font-weight:700; font-size:.85rem; border:1px solid transparent }
+  .chip .dot{ width:8px; height:8px; border-radius:50% }
+  .chip.open{ background: color-mix(in oklab, var(--chip-open) 18%, var(--bg)); color: var(--text) }
+  .chip.open .dot{ background: var(--chip-open) }
+  .chip.live{ background: color-mix(in oklab, var(--chip-live) 22%, var(--bg)); color: var(--text) }
+  .chip.live .dot{ background: var(--chip-live) }
+  .chip.finished{ background: color-mix(in oklab, var(--chip-finished) 18%, var(--bg)); color: var(--text) }
+  .chip.finished .dot{ background: var(--chip-finished) }
+  .chip.void{ background: color-mix(in oklab, var(--chip-void) 22%, var(--bg)); color: var(--text) }
+  .chip.void .dot{ background: var(--chip-void) }
   </style>
 
   <!-- Supabase JS -->
@@ -299,12 +297,10 @@
     <!-- APP -->
     <section id="app" class="hidden">
       <nav class="dock">
-        <!-- Navegação -->
         <button class="tab-btn" type="button" data-tab="jogos" aria-selected="true">Fazer apostas</button>
         <button class="tab-btn" type="button" data-tab="bets">Minhas apostas</button>
         <button class="tab-btn" type="button" data-tab="leaderboard">Leaderboard</button>
         <button id="adminTabBtn" class="tab-btn hidden" type="button" data-tab="admin">Admin</button>
-
       </nav>
 
       <!-- Jogos -->
@@ -445,80 +441,115 @@
 
     let RECOVERY_LOCK = false;
 
-    const MAX_PER_MATCH = 10; // teto por partida
+    // teto por partida
+    const MAX_PER_MATCH = 10;
 
+    // URL para redireciono de e-mail/reset
     const REDIRECT_TO = (location.origin + location.pathname)
-  .replace(/index\.html?$/,'')
-  .replace(/\/?$/, '/'); // garante barra no final
+      .replace(/index\.html?$/,'')
+      .replace(/\/?$/, '/'); // garante barra no final
+
+    const PROJECT_REF = (() => {
+      try { return new URL(SUPABASE_URL).hostname.split('.')[0]; } catch { return ''; }
+    })();
+    const AUTH_STORAGE_KEY = PROJECT_REF ? `sb-${PROJECT_REF}-auth-token` : null;
+
+    // Encerramento local forçado (UI + canais + storage), independente da rede
+    function hardLogoutUI(){
+      try {
+        // fecha todos os canais realtime
+        if (supabase?.getChannels) supabase.getChannels().forEach(ch => supabase.removeChannel(ch));
+      } catch {}
+      try {
+        if (AUTH_STORAGE_KEY) localStorage.removeItem(AUTH_STORAGE_KEY);
+      } catch {}
+      try {
+        // limpa fragmento de URL (#...) se existir
+        if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+      } catch {}
+      // zera estado e volta UI para tela de login
+      session = null; profile = null; myBets = []; matches = [];
+      document.getElementById('auth')?.classList.remove('hidden');
+      document.getElementById('app')?.classList.add('hidden');
+      document.getElementById('userBar')?.classList.add('hidden');
+      setOnline(false);
+    }
+
+    // Limpa fragmento (#access_token=...) se sobrou de fluxos anteriores
+    (function clearStaleAuthHash(){
+      const p = new URLSearchParams(location.hash.slice(1));
+      if (p.has('access_token')) {
+        history.replaceState(null, '', location.pathname + location.search);
+      }
+    })();
 
     async function startRecoveryFlow(){
-  if (RECOVERY_LOCK) return;
-  RECOVERY_LOCK = true;
-  try{
-    const { data: s1 } = await supabase.auth.getSession();
-    if (!s1.session) {
-      const params = new URLSearchParams(location.hash.slice(1));
-      const at = params.get('access_token');
-      const rt = params.get('refresh_token');
-      if (at && rt) {
-        const { error: setErr } = await supabase.auth.setSession({ access_token: at, refresh_token: rt });
-        if (setErr) throw setErr;
+      if (RECOVERY_LOCK) return;
+      RECOVERY_LOCK = true;
+      try{
+        const { data: s1 } = await supabase.auth.getSession();
+        if (!s1.session) {
+          const params = new URLSearchParams(location.hash.slice(1));
+          const at = params.get('access_token');
+          const rt = params.get('refresh_token');
+          if (at && rt) {
+            const { error: setErr } = await supabase.auth.setSession({ access_token: at, refresh_token: rt });
+            if (setErr) throw setErr;
+          }
+        }
+
+        const newPass = prompt('Digite sua nova senha (mín. 6 caracteres):');
+        if (!newPass) {
+          if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+          await refreshSession();
+          return;
+        }
+
+        const { error } = await supabase.auth.updateUser({ password: newPass });
+        if (error) throw error;
+
+        toast('Senha alterada com sucesso. Você já está logado.');
+        if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+        await refreshSession();
+      } catch (e){
+        toast('Erro ao redefinir senha: ' + e.message, true);
+      } finally {
+        RECOVERY_LOCK = false;
       }
     }
 
-    const newPass = prompt('Digite sua nova senha (mín. 6 caracteres):');
-    if (!newPass) {
-      // opcional: limpa o hash pra não reentrar se a pessoa cancelou
-      if (location.hash) history.replaceState(null, '', location.pathname + location.search);
-      await refreshSession();
-      return;
-    }
-
-    const { error } = await supabase.auth.updateUser({ password: newPass });
-    if (error) throw error;
-
-    toast('Senha alterada com sucesso. Você já está logado.');
-    if (location.hash) history.replaceState(null, '', location.pathname + location.search);
-    await refreshSession();
-  } catch (e){
-    toast('Erro ao redefinir senha: ' + e.message, true);
-  } finally {
-    RECOVERY_LOCK = false;
-  }
-}  
-
-  // =====================
+    // =====================
     // UTIL
     // =====================
-    // Fuso horário fixo (Brasília)
-const TZ = 'America/Sao_Paulo';
-const fmtMoney = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const TZ = 'America/Sao_Paulo';
+    const fmtMoney = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-// evita “voltar um dia” quando vier só 'YYYY-MM-DD'
-function toDateSafe(x){
-  if (typeof x === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(x)) {
-    const [y,m,d] = x.split('-').map(Number);
-    return new Date(Date.UTC(y, m-1, d, 12, 0)); // meio-dia UTC
-  }
-  return new Date(x);
-}
+    function toDateSafe(x){
+      if (typeof x === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(x)) {
+        const [y,m,d] = x.split('-').map(Number);
+        return new Date(Date.UTC(y, m-1, d, 12, 0)); // meio-dia UTC
+      }
+      return new Date(x);
+    }
 
-const fmtDate = (iso) =>
-  new Intl.DateTimeFormat('pt-BR', {
-    timeZone: TZ,
-    day: '2-digit', month: '2-digit', year: 'numeric',
-    hour: '2-digit', minute: '2-digit', hour12: false,
-  }).format(toDateSafe(iso));
+    const fmtDate = (iso) =>
+      new Intl.DateTimeFormat('pt-BR', {
+        timeZone: TZ,
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', hour12: false,
+      }).format(toDateSafe(iso));
 
-function toISOInBRT(ymdHm) {
-  if (!ymdHm) return null;
-  const [d, t = '00:00'] = ymdHm.split('T');
-  const [y, m, dd] = d.split('-').map(Number);
-  const [hh, mm] = t.split(':').map(Number);
-  // BRT = UTC-03:00  →  UTC = local + 3h
-  const utcMs = Date.UTC(y, m - 1, dd, hh + 3, mm);
-  return new Date(utcMs).toISOString();
-}
+    // Converte 'YYYY-MM-DDTHH:mm' em ISO considerando que o input está em BRT
+    function toISOInBRT(ymdHm) {
+      if (!ymdHm) return null;
+      const [d, t = '00:00'] = ymdHm.split('T');
+      const [y, m, dd] = d.split('-').map(Number);
+      const [hh, mm] = t.split(':').map(Number);
+      // BRT = UTC-03:00  →  UTC = local + 3h
+      const utcMs = Date.UTC(y, m - 1, dd, hh + 3, mm);
+      return new Date(utcMs).toISOString();
+    }
+
     const $ = (q) => document.querySelector(q);
     function toast(msg, isErr=false){ const t = $('#toast'); t.textContent = msg; t.classList.remove('hidden'); t.classList.toggle('err', !!isErr); setTimeout(() => t.classList.add('hidden'), 3200); }
     function setOnline(on){ $('#statusDot').style.background = on ? '#10b981' : '#f59e0b'; $('#statusText').textContent = on ? 'conectado' : 'offline'; }
@@ -528,7 +559,6 @@ function toISOInBRT(ymdHm) {
     // =====================
     // STATE
     // =====================
-
     const STATUS_LABEL = {
       open: 'Aberta',
       live: 'Ao vivo',
@@ -547,29 +577,33 @@ function toISOInBRT(ymdHm) {
     let oddChangeMap = new Map();
     let filtersBound = false;
 
-    // Timers for countdown/auto-refresh
+    // Realtime single-channel
+    let rtChannel = null;
+    let rtUserId = null;
+
+    // Timers
     let countdownInterval = null;
     let nextStartTimeout = null;
 
     function updateCountdowns(){
-    const now = Date.now();
-    document.querySelectorAll('[data-countdown]').forEach(el => {
-      const status = (el.dataset.status || 'open');
-      if (status === 'live'){ el.textContent = '• ao vivo'; return; }
-      if (status === 'finished'){ el.textContent = '• terminada'; return; }
-      if (status === 'void'){ el.textContent = '• cancelada'; return; }
+      const now = Date.now();
+      document.querySelectorAll('[data-countdown]').forEach(el => {
+        const status = (el.dataset.status || 'open');
+        if (status === 'live'){ el.textContent = '• ao vivo'; return; }
+        if (status === 'finished'){ el.textContent = '• terminada'; return; }
+        if (status === 'void'){ el.textContent = '• cancelada'; return; }
 
-      // status === 'open'
-      const ts = parseInt(el.dataset.countdown||'0',10);
-      const diff = ts - now;
-      if (diff <= 0){ el.textContent = '• ao vivo'; return; }
-      const sec = Math.floor(diff/1000);
-      const h = String(Math.floor(sec/3600)).padStart(2,'0');
-      const m = String(Math.floor((sec%3600)/60)).padStart(2,'0');
-      const s = String(Math.floor(sec%60)).padStart(2,'0');
-      el.textContent = `• começa em ${h}:${m}:${s}`;
-    });
-  }
+        // status === 'open'
+        const ts = parseInt(el.dataset.countdown||'0',10);
+        const diff = ts - now;
+        if (diff <= 0){ el.textContent = '• ao vivo'; return; }
+        const sec = Math.floor(diff/1000);
+        const h = String(Math.floor(sec/3600)).padStart(2,'0');
+        const m = String(Math.floor((sec%3600)/60)).padStart(2,'0');
+        const s = String(Math.floor(sec%60)).padStart(2,'0');
+        el.textContent = `• começa em ${h}:${m}:${s}`;
+      });
+    }
 
     function scheduleNextMatchRefresh(){
       clearTimeout(nextStartTimeout);
@@ -616,15 +650,30 @@ function toISOInBRT(ymdHm) {
         $('#auth').classList.remove('hidden');
         $('#app').classList.add('hidden');
         $('#userBar').classList.add('hidden');
+        cleanupRealtime();
       }
     }
 
-      supabase.auth.onAuthStateChange(async (event, _sess) => {
+    // Limpa todos os canais realtime
+    function cleanupRealtime(){
+      try{
+        supabase.getChannels().forEach(ch => supabase.removeChannel(ch));
+      }catch{}
+      rtChannel = null;
+      rtUserId = null;
+      setOnline(false);
+    }
+
+    supabase.auth.onAuthStateChange(async (event, _sess) => {
       const isRecoveryHash = new URLSearchParams(location.hash.slice(1)).get('type') === 'recovery';
 
       if (event === 'PASSWORD_RECOVERY' || (event === 'SIGNED_IN' && isRecoveryHash)) {
         await startRecoveryFlow();
-        return; // o próprio startRecoveryFlow já chama refreshSession()
+        return; // startRecoveryFlow() já chama refreshSession()
+      }
+
+      if (event === 'SIGNED_OUT') {
+        cleanupRealtime();
       }
 
       refreshSession();
@@ -636,7 +685,6 @@ function toISOInBRT(ymdHm) {
         startRecoveryFlow();
       }
     })();
-
 
     async function checkAdmin(){
       try{
@@ -671,11 +719,26 @@ function toISOInBRT(ymdHm) {
       if (!error) toast('Conta criada, agora é só entrar.');
     });
 
-    $('#signOutBtn').addEventListener('click', async () => {
-      await supabase.auth.signOut();
-      session = null; profile = null; myBets = []; matches = [];
-      location.reload();
-    });
+    let LOGOUT_LOCK = false;
+document.getElementById('signOutBtn').addEventListener('click', async () => {
+  if (LOGOUT_LOCK) return; // evita cliques duplos
+  LOGOUT_LOCK = true;
+
+  try {
+    // Faz UM signOut (global). Se a rede ou o token falhar, seguimos com o hardLogout.
+    const { error } = await supabase.auth.signOut({ scope: 'global' });
+    // Erros comuns e inofensivos (ex.: sem sessão) são ignorados
+    if (error && !/session|signed.*out|not.*logged/i.test(error.message)) {
+      console.warn('signOut aviso:', error.message);
+    }
+  } catch (e) {
+    console.warn('signOut exceção:', e?.message || e);
+  } finally {
+    // Garante limpeza local e UI deslogada, independente do resultado acima
+    hardLogoutUI();
+    LOGOUT_LOCK = false;
+  }
+});
 
     // botão "Esqueci minha senha"
     document.getElementById('forgotBtn').addEventListener('click', async () => {
@@ -705,33 +768,33 @@ function toISOInBRT(ymdHm) {
     // =====================
     document.querySelectorAll('.tab-btn').forEach(btn => { btn.addEventListener('click', () => switchTab(btn.dataset.tab, btn)); });
     function switchTab(tab, btn){
-  const to = document.querySelector('#tab-'+tab);
-  if (!to) return;
+      const to = document.querySelector('#tab-'+tab);
+      if (!to) return;
 
-  const panels = ['jogos','bets','leaderboard','admin'].map(t=>document.querySelector('#tab-'+t)).filter(Boolean);
-  const from = panels.find(el => !el.classList.contains('hidden'));
+      const panels = ['jogos','bets','leaderboard','admin'].map(t=>document.querySelector('#tab-'+t)).filter(Boolean);
+      const from = panels.find(el => !el.classList.contains('hidden'));
 
-  document.querySelectorAll('.tab-btn').forEach(b => b.setAttribute('aria-selected', String(b===btn)));
-  if (from === to) return;
+      document.querySelectorAll('.tab-btn').forEach(b => b.setAttribute('aria-selected', String(b===btn)));
+      if (from === to) return;
 
-  // entra
-  to.classList.remove('hidden');
-  to.classList.add('anim-enter');
-  requestAnimationFrame(() => {
-    to.classList.remove('anim-enter'); // transiciona para o estado normal
-  });
+      // entra
+      to.classList.remove('hidden');
+      to.classList.add('anim-enter');
+      requestAnimationFrame(() => {
+        to.classList.remove('anim-enter');
+      });
 
-  // sai
-  if (from){
-    from.classList.add('anim-exit');
-    from.addEventListener('transitionend', function onExit(e){
-      if (e.target !== from) return;
-      from.removeEventListener('transitionend', onExit);
-      from.classList.remove('anim-exit');
-      from.classList.add('hidden');
-    });
-  }
-}
+      // sai
+      if (from){
+        from.classList.add('anim-exit');
+        from.addEventListener('transitionend', function onExit(e){
+          if (e.target !== from) return;
+          from.removeEventListener('transitionend', onExit);
+          from.classList.remove('anim-exit');
+          from.classList.add('hidden');
+        });
+      }
+    }
 
     (function tagTabsAsViews(){
       ['jogos','bets','leaderboard','admin'].forEach(t=>{
@@ -853,20 +916,30 @@ function toISOInBRT(ymdHm) {
 
     async function loadMatches(){
       const nowIso = new Date().toISOString();
-      let q = supabase.from('matches').select('*').in('status', ['open','live']);
+
+      let q = supabase.from('matches').select('*');
+
       if (filterDate){
+        // janela do dia (BRT) e apenas open|live nesse range
         const startIso = toISOInBRT(filterDate + 'T00:00');
         const startDateUtc = new Date(startIso);
-        const endDateUtc = new Date(startDateUtc.getTime() + 24*60*60*1000); // +1 dia em Brasília
-        q = q.gte('start_time', startDateUtc.toISOString())
-              .lt('start_time', endDateUtc.toISOString());
+        const endDateUtc = new Date(startDateUtc.getTime() + 24*60*60*1000);
+        q = q
+          .in('status', ['open','live'])
+          .gte('start_time', startDateUtc.toISOString())
+          .lt('start_time', endDateUtc.toISOString());
       } else {
-        q = q.gte('start_time', nowIso);
+        // mostra OPEN futuros e LIVE independente do start_time (não esconde jogos ao vivo)
+        q = q.or(`and(status.eq.open,start_time.gte.${nowIso}),status.eq.live`);
       }
+
       if (filterTournamentId){ q = q.eq('api_tournament_id', filterTournamentId); }
+
       q = q.order('start_time', { ascending: true });
+
       const { data, error } = await q;
       if (error) { console.error(error); toast('Erro ao carregar jogos', true); return; }
+
       const before = new Map(matches.map(mm => [mm.id, {a:mm.odd_a, b:mm.odd_b}]));
       matches = data || [];
       oddChangeMap = new Map();
@@ -887,420 +960,409 @@ function toISOInBRT(ymdHm) {
     }
 
     function renderMatchCard(m, opts = {}) {
-  const startTs = new Date(m.start_time).getTime();
-  const nowTs = Date.now();
-  const closed = (nowTs >= startTs) || (m.status && m.status !== 'open');
+      const startTs = new Date(m.start_time).getTime();
+      const nowTs = Date.now();
+      const statusKey = (m.status || 'open');
+      const closed = (nowTs >= startTs) || (statusKey !== 'open');
 
-  const ta = (m.api_team_a_id && teamsById.get(m.api_team_a_id)) || findTeamByName(m.team_a) || { name: m.team_a };
-  const tb = (m.api_team_b_id && teamsById.get(m.api_team_b_id)) || findTeamByName(m.team_b) || { name: m.team_b };
-  const tour = (m.api_tournament_id && tournamentsById.get(m.api_tournament_id)) || null;
+      const ta = (m.api_team_a_id && teamsById.get(m.api_team_a_id)) || findTeamByName(m.team_a) || { name: m.team_a };
+      const tb = (m.api_team_b_id && teamsById.get(m.api_team_b_id)) || findTeamByName(m.team_b) || { name: m.team_b };
+      const tour = (m.api_tournament_id && tournamentsById.get(m.api_tournament_id)) || null;
 
-  const wrapper = document.createElement('div');
-  wrapper.className = 'surface match-card';
-  wrapper.classList.add('appear');
+      const wrapper = document.createElement('div');
+      wrapper.className = 'surface match-card appear';
 
+      // ---------- Header ----------
+      const head = document.createElement('div'); head.className = 'match-head';
+      const leftH = document.createElement('div'); leftH.className = 'left';
+      const when = document.createElement('span'); when.className = 'muted'; when.textContent = fmtDate(m.start_time);
+      leftH.appendChild(when);
 
-  // ---------- Header ----------
-  const head = document.createElement('div'); head.className = 'match-head';
-  const leftH = document.createElement('div'); leftH.className = 'left';
-  const when = document.createElement('span'); when.className = 'muted'; when.textContent = fmtDate(m.start_time);
-  leftH.appendChild(when);
+      const cd = document.createElement('span');
+      cd.className = 'muted mono';
+      cd.style.marginLeft = '8px';
+      cd.dataset.countdown = String(startTs);
+      cd.dataset.status = statusKey;
+      cd.textContent = statusKey === 'live'     ? '• ao vivo'
+                    : statusKey === 'finished' ? '• terminada'
+                    : statusKey === 'void'     ? '• cancelada'
+                    : (startTs <= Date.now() ? '• ao vivo' : '• começa em -');
+      leftH.appendChild(cd);
 
-  const cd = document.createElement('span');
-  cd.className = 'muted mono';
-  cd.style.marginLeft = '8px';
-  cd.dataset.countdown = String(startTs);
-  cd.dataset.live = (m.status && m.status !== 'open') ? '1' : '0';
-  cd.dataset.status = m.status || 'open';
-  cd.textContent = (cd.dataset.live === '1' || startTs <= Date.now()) ? '• ao vivo' : '• começa em -';
-  leftH.appendChild(cd);
+      const rightH = document.createElement('div'); rightH.className = 'right match-tournament';
+      if (tour?.logo) { const img = document.createElement('img'); img.src = tour.logo; img.alt = tour.name; rightH.appendChild(img); }
+      const tourName = document.createElement('span'); tourName.textContent = m.tournament_name || tour?.name || 'UNIVLR';
+      rightH.appendChild(tourName);
 
-  const rightH = document.createElement('div'); rightH.className = 'right match-tournament';
-  if (tour?.logo) { const img = document.createElement('img'); img.src = tour.logo; img.alt = tour.name; rightH.appendChild(img); }
-  const tourName = document.createElement('span'); tourName.textContent = m.tournament_name || tour?.name || 'UNIVLR';
-  rightH.appendChild(tourName);
-  const statusKey = (m.status || 'open');
-  const stat = document.createElement('span');
-  stat.className = `chip ${statusKey}`;
-  stat.innerHTML = `<span class="dot"></span>${STATUS_LABEL[statusKey] || statusKey}`;
-  rightH.appendChild(stat);
+      const stat = document.createElement('span');
+      stat.className = `chip ${statusKey}`;
+      stat.innerHTML = `<span class="dot"></span>${STATUS_LABEL[statusKey] || statusKey}`;
+      rightH.appendChild(stat);
 
-  head.appendChild(leftH); head.appendChild(rightH);
+      head.appendChild(leftH); head.appendChild(rightH);
 
-  // ---------- Main ----------
-  const main = document.createElement('div'); main.className = 'match-main';
+      // ---------- Main ----------
+      const main = document.createElement('div'); main.className = 'match-main';
 
-  // Left team
-  const left = document.createElement('div'); left.className = 'team-col';
-  const la = document.createElement('div'); la.className = 'team-logo';
-  if (ta.logo) { const i = document.createElement('img'); i.src = ta.logo; i.alt = ta.name; la.appendChild(i); } else { la.textContent = initials(ta.name); }
-  const lt = document.createElement('div'); lt.className = 'team-text';
-  const ltitle = document.createElement('div'); ltitle.className = 'team-title';
-  const favA = document.createElement('button'); favA.className = 'btn ghost'; favA.style.padding = '4px 8px'; favA.title = 'Favoritar'; favA.textContent = favorites.has(ta.id) ? '⭐' : '☆';
-  favA.addEventListener('click', (ev) => {
-    ev.stopPropagation(); if (!ta.id) return;
-    if (favorites.has(ta.id)) favorites.delete(ta.id); else favorites.add(ta.id);
-    localStorage.setItem('favoriteTeams', JSON.stringify([...favorites]));
-    favA.textContent = favorites.has(ta.id) ? '⭐' : '☆';
-    renderFavBar(); renderMatches();
-  });
-  ltitle.appendChild(favA);
-  const ltxt = document.createElement('span'); ltxt.textContent = ' ' + (ta.tag ? `[${ta.tag}] ${ta.name}` : (ta.name || 'Time A'));
-  ltitle.appendChild(ltxt);
-  lt.appendChild(ltitle);
+      // Left team
+      const left = document.createElement('div'); left.className = 'team-col';
+      const la = document.createElement('div'); la.className = 'team-logo';
+      if (ta.logo) { const i = document.createElement('img'); i.src = ta.logo; i.alt = ta.name; la.appendChild(i); } else { la.textContent = initials(ta.name); }
+      const lt = document.createElement('div'); lt.className = 'team-text';
+      const ltitle = document.createElement('div'); ltitle.className = 'team-title';
+      const favA = document.createElement('button'); favA.className = 'btn ghost'; favA.style.padding = '4px 8px'; favA.title = 'Favoritar'; favA.textContent = favorites.has(ta.id) ? '⭐' : '☆';
+      favA.addEventListener('click', (ev) => {
+        ev.stopPropagation(); if (!ta.id) return;
+        if (favorites.has(ta.id)) favorites.delete(ta.id); else favorites.add(ta.id);
+        localStorage.setItem('favoriteTeams', JSON.stringify([...favorites]));
+        favA.textContent = favorites.has(ta.id) ? '⭐' : '☆';
+        renderFavBar(); renderMatches();
+      });
+      ltitle.appendChild(favA);
+      const ltxt = document.createElement('span'); ltxt.textContent = ' ' + (ta.tag ? `[${ta.tag}] ${ta.name}` : (ta.name || 'Time A'));
+      ltitle.appendChild(ltxt);
+      lt.appendChild(ltitle);
 
-  left.appendChild(la); left.appendChild(lt);
-  left.addEventListener('click', () => openTeamModal(ta));
+      left.appendChild(la); left.appendChild(lt);
+      left.addEventListener('click', () => openTeamModal(ta));
 
-  // Center odds
-const center = document.createElement('div'); center.className = 'odds-box';
+      // Center odds
+      const center = document.createElement('div'); center.className = 'odds-box';
 
-// odds (botões)
-const oddA = document.createElement('button'); oddA.className = 'oddbtn'; oddA.textContent = Number(m.odd_a).toFixed(2);
-if (closed) oddA.disabled = true;
-const sep = document.createElement('span'); sep.textContent = 'x';
-const oddB = document.createElement('button'); oddB.className = 'oddbtn'; oddB.textContent = Number(m.odd_b).toFixed(2);
-if (closed) oddB.disabled = true;
-[oddA, oddB].forEach(btn => {
-  btn.addEventListener('click', () => {
-    btn.classList.add('pop');
-    btn.addEventListener('animationend', () => btn.classList.remove('pop'), { once: true });
-  });
-});
+      const oddA = document.createElement('button'); oddA.className = 'oddbtn'; oddA.textContent = Number(m.odd_a).toFixed(2);
+      if (closed) oddA.disabled = true;
+      const sep = document.createElement('span'); sep.textContent = 'x';
+      const oddB = document.createElement('button'); oddB.className = 'oddbtn'; oddB.textContent = Number(m.odd_b).toFixed(2);
+      if (closed) oddB.disabled = true;
+      [oddA, oddB].forEach(btn => {
+        btn.addEventListener('click', () => {
+          btn.classList.add('pop');
+          btn.addEventListener('animationend', () => btn.classList.remove('pop'), { once: true });
+        });
+      });
 
-let stakeLeft = 0, stakeRight = 0;
-if (opts.forBetList && opts.bet) {
-  // em "Minhas apostas", usa a própria aposta do card
-  if (opts.bet.selection === 'A') stakeLeft  = Number(opts.bet.stake || 0);
-  if (opts.bet.selection === 'B') stakeRight = Number(opts.bet.stake || 0);
-} else {
-  const ex = myOpenBets.get(m.id);
-  if (ex?.selection === 'A') stakeLeft  = Number(ex.stake || 0);
-  if (ex?.selection === 'B') stakeRight = Number(ex.stake || 0);
-}
+      let stakeLeft = 0, stakeRight = 0;
+      if (opts.forBetList && opts.bet) {
+        if (opts.bet.selection === 'A') stakeLeft  = Number(opts.bet.stake || 0);
+        if (opts.bet.selection === 'B') stakeRight = Number(opts.bet.stake || 0);
+      } else {
+        const ex = myOpenBets.get(m.id);
+        if (ex?.selection === 'A') stakeLeft  = Number(ex.stake || 0);
+        if (ex?.selection === 'B') stakeRight = Number(ex.stake || 0);
+      }
 
-// linha de odds com os valores apostados ao lado (verde)
-const oddsLine = document.createElement('div'); oddsLine.className = 'odds-line';
-if (stakeLeft > 0) {
-  const s = document.createElement('span'); s.className = 'mono stake-ind';
-  s.textContent = fmtMoney.format(stakeLeft);
-  oddsLine.appendChild(s); // fica ANTES da odd A
-}
-oddsLine.appendChild(oddA);
-oddsLine.appendChild(sep);
-oddsLine.appendChild(oddB);
-if (stakeRight > 0) {
-  const s = document.createElement('span'); s.className = 'mono stake-ind';
-  s.textContent = fmtMoney.format(stakeRight);
-  oddsLine.appendChild(s); // fica DEPOIS da odd B
-}
+      const oddsLine = document.createElement('div'); oddsLine.className = 'odds-line';
+      if (stakeLeft > 0) {
+        const s = document.createElement('span'); s.className = 'mono stake-ind';
+        s.textContent = fmtMoney.format(stakeLeft);
+        oddsLine.appendChild(s);
+      }
+      oddsLine.appendChild(oddA);
+      oddsLine.appendChild(sep);
+      oddsLine.appendChild(oddB);
+      if (stakeRight > 0) {
+        const s = document.createElement('span'); s.className = 'mono stake-ind';
+        s.textContent = fmtMoney.format(stakeRight);
+        oddsLine.appendChild(s);
+      }
 
-// bloqueio de lado oposto + abrir sheet
-if (!opts.forBetList) {
-  if (!closed) oddA.addEventListener('click', () => {
-    const existing = myOpenBets.get(m.id);
-    if (existing && existing.selection === 'B') {
-      toast('Você não pode apostar nos dois lados. Remova a aposta no outro lado para apostar neste.', true);
-      return;
-    }
-    openBetSheet(m, 'A', Number(m.odd_a), ta, tb);
-  });
-  if (!closed) oddB.addEventListener('click', () => {
-    const existing = myOpenBets.get(m.id);
-    if (existing && existing.selection === 'A') {
-      toast('Você não pode apostar nos dois lados. Remova a aposta no outro lado para apostar neste.', true);
-      return;
-    }
-    openBetSheet(m, 'B', Number(m.odd_b), ta, tb);
-  });
-} else {
-  if (opts.bet?.selection === 'A') oddA.classList.add('selected');
-  if (opts.bet?.selection === 'B') oddB.classList.add('selected');
-  oddA.disabled = true; oddB.disabled = true;
-}
+      if (!opts.forBetList) {
+        if (!closed) oddA.addEventListener('click', () => {
+          const existing = myOpenBets.get(m.id);
+          if (existing && existing.selection === 'B') {
+            toast('Você não pode apostar nos dois lados. Remova a aposta no outro lado para apostar neste.', true);
+            return;
+          }
+          openBetSheet(m, 'A', Number(m.odd_a), ta, tb);
+        });
+        if (!closed) oddB.addEventListener('click', () => {
+          const existing = myOpenBets.get(m.id);
+          if (existing && existing.selection === 'A') {
+            toast('Você não pode apostar nos dois lados. Remova a aposta no outro lado para apostar neste.', true);
+            return;
+          }
+          openBetSheet(m, 'B', Number(m.odd_b), ta, tb);
+        });
+      } else {
+        if (opts.bet?.selection === 'A') oddA.classList.add('selected');
+        if (opts.bet?.selection === 'B') oddB.classList.add('selected');
+        oddA.disabled = true; oddB.disabled = true;
+      }
 
-const ch = oddChangeMap.get(m.id);
-if (ch) {
-  if (ch.a) oddA.classList.add(ch.a > 0 ? 'blink-up' : 'blink-down');
-  if (ch.b) oddB.classList.add(ch.b > 0 ? 'blink-up' : 'blink-down');
-  setTimeout(() => { oddA.classList.remove('blink-up', 'blink-down'); oddB.classList.remove('blink-up', 'blink-down'); }, 800);
-}
+      const ch = oddChangeMap.get(m.id);
+      if (ch) {
+        if (ch.a) oddA.classList.add(ch.a > 0 ? 'blink-up' : 'blink-down');
+        if (ch.b) oddB.classList.add(ch.b > 0 ? 'blink-up' : 'blink-down');
+        setTimeout(() => { oddA.classList.remove('blink-up', 'blink-down'); oddB.classList.remove('blink-up', 'blink-down'); }, 800);
+      }
 
-center.appendChild(oddsLine);
-if (closed) {
-  const lbl = document.createElement('div'); lbl.className = 'muted'; lbl.textContent = 'Apostas fechadas';
-  center.appendChild(lbl);
-}
+      center.appendChild(oddsLine);
+      if (closed) {
+        const lbl = document.createElement('div'); lbl.className = 'muted'; lbl.textContent = 'Apostas fechadas';
+        center.appendChild(lbl);
+      }
 
-if (!opts.forBetList && (m.status === 'open') && (new Date(m.start_time).getTime() > Date.now())) {
-  const existing = myOpenBets.get(m.id) || null;
-  const already = Number(existing?.stake || 0);
-  const limitLeft = Math.max(0, MAX_PER_MATCH - already);
+      if (!opts.forBetList && (m.status === 'open') && (new Date(m.start_time).getTime() > Date.now())) {
+        const existing = myOpenBets.get(m.id) || null;
+        const already = Number(existing?.stake || 0);
+        const limitLeft = Math.max(0, MAX_PER_MATCH - already);
 
-  const limitLbl = document.createElement('div');
-  limitLbl.className = 'muted mono';
-  limitLbl.textContent = `Limite restante: ${fmtMoney.format(limitLeft)}`;
-  center.appendChild(limitLbl);
-}
+        const limitLbl = document.createElement('div');
+        limitLbl.className = 'muted mono';
+        limitLbl.textContent = `Limite restante: ${fmtMoney.format(limitLeft)}`;
+        center.appendChild(limitLbl);
+      }
 
+      // Right team
+      const right = document.createElement('div'); right.className = 'team-col right';
+      const rt = document.createElement('div'); rt.className = 'team-text';
+      const rtitle = document.createElement('div'); rtitle.className = 'team-title';
+      const favB = document.createElement('button'); favB.className = 'btn ghost'; favB.style.padding = '4px 8px'; favB.title = 'Favoritar'; favB.textContent = favorites.has(tb.id) ? '⭐' : '☆';
+      favB.addEventListener('click', (ev) => {
+        ev.stopPropagation(); if (!tb.id) return;
+        if (favorites.has(tb.id)) favorites.delete(tb.id); else favorites.add(tb.id);
+        localStorage.setItem('favoriteTeams', JSON.stringify([...favorites]));
+        favB.textContent = favorites.has(tb.id) ? '⭐' : '☆';
+        renderFavBar(); renderMatches();
+      });
+      rtitle.appendChild(favB);
+      const rtxt = document.createElement('span'); rtxt.textContent = ' ' + (tb.tag ? `[${tb.tag}] ${tb.name}` : (tb.name || 'Time B'));
+      rtitle.appendChild(rtxt);
+      rt.appendChild(rtitle);
 
-  // Right team
-  const right = document.createElement('div'); right.className = 'team-col right';
-  const rt = document.createElement('div'); rt.className = 'team-text';
-  const rtitle = document.createElement('div'); rtitle.className = 'team-title';
-  const favB = document.createElement('button'); favB.className = 'btn ghost'; favB.style.padding = '4px 8px'; favB.title = 'Favoritar'; favB.textContent = favorites.has(tb.id) ? '⭐' : '☆';
-  favB.addEventListener('click', (ev) => {
-    ev.stopPropagation(); if (!tb.id) return;
-    if (favorites.has(tb.id)) favorites.delete(tb.id); else favorites.add(tb.id);
-    localStorage.setItem('favoriteTeams', JSON.stringify([...favorites]));
-    favB.textContent = favorites.has(tb.id) ? '⭐' : '☆';
-    renderFavBar(); renderMatches();
-  });
-  rtitle.appendChild(favB);
-  const rtxt = document.createElement('span'); rtxt.textContent = ' ' + (tb.tag ? `[${tb.tag}] ${tb.name}` : (tb.name || 'Time B'));
-  rtitle.appendChild(rtxt);
-  rt.appendChild(rtitle);
+      const rb = document.createElement('div'); rb.className = 'team-logo';
+      if (tb.logo) { const i = document.createElement('img'); i.src = tb.logo; i.alt = tb.name; rb.appendChild(i); } else { rb.textContent = initials(tb.name); }
 
-  const rb = document.createElement('div'); rb.className = 'team-logo';
-  if (tb.logo) { const i = document.createElement('img'); i.src = tb.logo; i.alt = tb.name; rb.appendChild(i); } else { rb.textContent = initials(tb.name); }
+      right.appendChild(rt); right.appendChild(rb);
+      right.addEventListener('click', () => openTeamModal(tb));
 
-  right.appendChild(rt); right.appendChild(rb);
-  right.addEventListener('click', () => openTeamModal(tb));
+      main.appendChild(left); main.appendChild(center); main.appendChild(right);
 
-  main.appendChild(left); main.appendChild(center); main.appendChild(right);
+      // ---------- Extra (em "Minhas apostas") ----------
+      if (opts.forBetList && opts.bet) {
+        const extra = document.createElement('div');
+        extra.style.display = 'flex'; extra.style.gap = '8px'; extra.style.flexWrap = 'wrap';
+        extra.style.borderTop = '1px dashed color-mix(in oklab, var(--text) 12%, transparent)';
+        extra.style.marginTop = '6px'; extra.style.paddingTop = '6px';
+        const pill = (txt) => { const s = document.createElement('span'); s.className = 'status-pill mono'; s.textContent = txt; return s; };
+        extra.appendChild(pill(`Aposta: ${opts.bet.selection} @ ${Number(opts.bet.odds).toFixed(2)}`));
+        extra.appendChild(pill(`Valor: ${fmtMoney.format(Number(opts.bet.stake))}`));
+        extra.appendChild(pill(`Status: ${STATUS_LABEL[opts.bet.status] || opts.bet.status}`));
+        extra.appendChild(pill(`Payout: ${fmtMoney.format(Number(opts.bet.payout || 0))}`));
+        const whenBet = document.createElement('span'); whenBet.className = 'muted'; whenBet.textContent = '• ' + fmtDate(opts.bet.created_at);
+        extra.appendChild(whenBet);
+        wrapper.appendChild(extra);
+      }
 
-  // ---------- Extra (quando exibindo em "Minhas apostas") ----------
-  if (opts.forBetList && opts.bet) {
-    const extra = document.createElement('div');
-    extra.style.display = 'flex'; extra.style.gap = '8px'; extra.style.flexWrap = 'wrap';
-    extra.style.borderTop = '1px dashed color-mix(in oklab, var(--text) 12%, transparent)';
-    extra.style.marginTop = '6px'; extra.style.paddingTop = '6px';
-    const pill = (txt) => { const s = document.createElement('span'); s.className = 'status-pill mono'; s.textContent = txt; return s; };
-    extra.appendChild(pill(`Aposta: ${opts.bet.selection} @ ${Number(opts.bet.odds).toFixed(2)}`));
-    extra.appendChild(pill(`Valor: ${fmtMoney.format(Number(opts.bet.stake))}`));
-    extra.appendChild(pill(`Status: ${STATUS_LABEL[opts.bet.status] || opts.bet.status}`));
-    extra.appendChild(pill(`Payout: ${fmtMoney.format(Number(opts.bet.payout || 0))}`));
-    const whenBet = document.createElement('span'); whenBet.className = 'muted'; whenBet.textContent = '• ' + fmtDate(opts.bet.created_at);
-    extra.appendChild(whenBet);
-    wrapper.appendChild(extra);
-  }
-
-  // ---------- Mount ----------
-  wrapper.appendChild(head);
-  wrapper.appendChild(main);
-  return wrapper;
-}
-
-
-function renderMatches(){
-  const box = document.getElementById('matchesList');
-  box.innerHTML = '';
-
-  let shown = 0;
-
-  for (const m of (matches || [])) {
-    // filtro favoritos
-    if (favOnly){
-      const ids = [m.api_team_a_id, m.api_team_b_id].map(x => Number(x || 0));
-      if (!ids.some(id => favorites.has(id))) continue;
+      wrapper.appendChild(head);
+      wrapper.appendChild(main);
+      return wrapper;
     }
 
-    // filtro texto
-    if (searchText){
-      const ta = (m.api_team_a_id && teamsById.get(m.api_team_a_id)) || { name: m.team_a, tag: '', university: '' };
-      const tb = (m.api_team_b_id && teamsById.get(m.api_team_b_id)) || { name: m.team_b, tag: '', university: '' };
-      const hay = normalize([ta.name, ta.tag, ta.university, tb.name, tb.tag, tb.university].join(' '));
-      if (!hay.includes(normalize(searchText))) continue;
+    function renderMatches(){
+      const box = document.getElementById('matchesList');
+      box.innerHTML = '';
+
+      let shown = 0;
+
+      for (const m of (matches || [])) {
+        // filtro favoritos
+        if (favOnly){
+          const ids = [m.api_team_a_id, m.api_team_b_id].map(x => Number(x || 0));
+          if (!ids.some(id => favorites.has(id))) continue;
+        }
+
+        // filtro texto
+        if (searchText){
+          const ta = (m.api_team_a_id && teamsById.get(m.api_team_a_id)) || { name: m.team_a, tag: '', university: '' };
+          const tb = (m.api_team_b_id && teamsById.get(m.api_team_b_id)) || { name: m.team_b, tag: '', university: '' };
+          const hay = normalize([ta.name, ta.tag, ta.university, tb.name, tb.tag, tb.university].join(' '));
+          if (!hay.includes(normalize(searchText))) continue;
+        }
+
+        box.appendChild(renderMatchCard(m));
+        shown++;
+      }
+
+      document.getElementById('matchesEmpty').classList.toggle('hidden', shown !== 0);
     }
-
-    box.appendChild(renderMatchCard(m));
-    shown++;
-  }
-
-  // mostra “Nenhum jogo...” se nada passou nos filtros
-  document.getElementById('matchesEmpty').classList.toggle('hidden', shown !== 0);
-}
-
 
     // =====================
     // BET SHEET
     // =====================
     function validateStake(){
-  const stakeEl = document.getElementById('betStake');
-  const slider  = document.getElementById('betSlider');
-  const confirmBtn = document.getElementById('betConfirm');
+      const stakeEl = document.getElementById('betStake');
+      const slider  = document.getElementById('betSlider');
+      const confirmBtn = document.getElementById('betConfirm');
 
-  let stake = Number(stakeEl.value || 0);
-  if (isNaN(stake)) stake = 0;
+      let stake = Number(stakeEl.value || 0);
+      if (isNaN(stake)) stake = 0;
 
-  // trava 0..MAX_PER_MATCH (não trava pelo saldo aqui de propósito)
-  if (stake < 0) stake = 0;
-  if (stake > MAX_PER_MATCH) stake = MAX_PER_MATCH;
-  stake = Math.round(stake);
+      // trava 0..MAX_PER_MATCH (não trava pelo saldo aqui de propósito)
+      if (stake < 0) stake = 0;
+      if (stake > MAX_PER_MATCH) stake = MAX_PER_MATCH;
+      stake = Math.round(stake);
 
-  stakeEl.value = String(stake);
-  if (slider.value !== String(stake)) slider.value = String(stake);
+      stakeEl.value = String(stake);
+      if (slider.value !== String(stake)) slider.value = String(stake);
 
-  confirmBtn.disabled = false;
-}
+      confirmBtn.disabled = false;
+    }
 
     function openBetSheet(match, selection, odds, teamA, teamB){
-  betCtx = { matchId: match.id, selection, odds, teamA, teamB };
+      betCtx = { matchId: match.id, selection, odds, teamA, teamB };
 
-  // Cabeçalho/visual
-  const logoA = document.getElementById('sumLogoA'); logoA.innerHTML=''; if (teamA?.logo){ const i=document.createElement('img'); i.src=teamA.logo; logoA.appendChild(i);} else { logoA.textContent = initials(teamA?.name||'A'); }
-  const logoB = document.getElementById('sumLogoB'); logoB.innerHTML=''; if (teamB?.logo){ const i=document.createElement('img'); i.src=teamB.logo; logoB.appendChild(i);} else { logoB.textContent = initials(teamB?.name||'B'); }
-  document.getElementById('sumNameA').textContent = teamA?.name || 'Time A';
-  document.getElementById('sumNameB').textContent = teamB?.name || 'Time B';
-  document.getElementById('sumOdds').textContent = `${selection} @ ${odds.toFixed(2)}`;
-  document.getElementById('betSide').textContent = selection;
+      // Cabeçalho/visual
+      const logoA = document.getElementById('sumLogoA'); logoA.innerHTML='';
+      if (teamA?.logo){ const i=document.createElement('img'); i.src=teamA.logo; logoA.appendChild(i);} else { logoA.textContent = initials(teamA?.name||'A'); }
+      const logoB = document.getElementById('sumLogoB'); logoB.innerHTML='';
+      if (teamB?.logo){ const i=document.createElement('img'); i.src=teamB.logo; logoB.appendChild(i);} else { logoB.textContent = initials(teamB?.name||'B'); }
+      document.getElementById('sumNameA').textContent = teamA?.name || 'Time A';
+      document.getElementById('sumNameB').textContent = teamB?.name || 'Time B';
+      document.getElementById('sumOdds').textContent = `${selection} @ ${odds.toFixed(2)}`;
+      document.getElementById('betSide').textContent = selection;
 
-  // Saldo e stake inicial (se já houver aposta nesse mesmo lado)
-  const bal = Number(profile?.credit || 0);
-  document.getElementById('betBalance').textContent = fmtMoney.format(bal);
-  const existing = myOpenBets.get(match.id);
-  const initialStake = (existing && existing.selection === selection) ? Number(existing.stake || 0) : 0;
+      // Saldo e stake inicial (se já houver aposta nesse mesmo lado)
+      const bal = Number(profile?.credit || 0);
+      document.getElementById('betBalance').textContent = fmtMoney.format(bal);
+      const existing = myOpenBets.get(match.id);
+      const initialStake = (existing && existing.selection === selection) ? Number(existing.stake || 0) : 0;
 
-  const stakeEl = document.getElementById('betStake');
-  const slider  = document.getElementById('betSlider');
+      const stakeEl = document.getElementById('betStake');
+      const slider  = document.getElementById('betSlider');
 
-  // Slider sempre 0..1000
-  slider.min = '0';
-  slider.max = String(MAX_PER_MATCH);
-  slider.step = '1';
-  slider.value = String(initialStake);
+      // Slider sempre 0..MAX_PER_MATCH (ajustado ao teto configurado)
+      slider.min = '0';
+      slider.max = String(MAX_PER_MATCH);
+      slider.step = '1';
+      slider.value = String(initialStake);
 
-  // Campo numérico acompanha o slider
-  stakeEl.min = '0';
-  stakeEl.max = String(MAX_PER_MATCH);
-  stakeEl.step = '1';
-  stakeEl.value = String(initialStake);
+      // Campo numérico acompanha o slider
+      stakeEl.min = '0';
+      stakeEl.max = String(MAX_PER_MATCH);
+      stakeEl.step = '1';
+      stakeEl.value = String(initialStake);
 
-  document.getElementById('betReturn').textContent = initialStake > 0 ? fmtMoney.format(initialStake * odds) : '-';
+      document.getElementById('betReturn').textContent = initialStake > 0 ? fmtMoney.format(initialStake * odds) : '-';
 
-  document.getElementById('betError').classList.add('hidden');
-  document.getElementById('betError').textContent = '';
-  document.getElementById('betSheet').classList.remove('hidden');
-  requestAnimationFrame(()=> document.getElementById('betSheet').classList.add('show'));
+      document.getElementById('betError').classList.add('hidden');
+      document.getElementById('betError').textContent = '';
+      document.getElementById('betSheet').classList.remove('hidden');
+      requestAnimationFrame(()=> document.getElementById('betSheet').classList.add('show'));
 
-
-  validateStake();
-  stakeEl.focus();
-  stakeEl.onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); confirmBet(); } };
-}    
+      validateStake();
+      stakeEl.focus();
+      stakeEl.onkeydown = (e) => { if (e.key === 'Enter') { e.preventDefault(); confirmBet(); } };
+    }
 
     function closeBetSheet(){
-  const sh = document.getElementById('betSheet');
-  sh.classList.remove('show');
-  const done = () => { sh.classList.add('hidden'); sh.removeEventListener('transitionend', done); betCtx = null; };
-  sh.addEventListener('transitionend', done);
-}
+      const sh = document.getElementById('betSheet');
+      sh.classList.remove('show');
+      const done = () => { sh.classList.add('hidden'); sh.removeEventListener('transitionend', done); betCtx = null; };
+      sh.addEventListener('transitionend', done);
+    }
     document.getElementById('betSheet').addEventListener('click', (e) => { if (e.target.id === 'betSheet') closeBetSheet(); });
     document.getElementById('betCancel').addEventListener('click', closeBetSheet);
     document.getElementById('betSheetClose').addEventListener('click', closeBetSheet);
+
     document.getElementById('betStake').addEventListener('input', () => {
-  validateStake();
-  const stake = Number(document.getElementById('betStake').value || 0);
-  const potential = stake * (betCtx?.odds || 0);
-  document.getElementById('betReturn').textContent = stake > 0 ? fmtMoney.format(potential) : '-';
-  document.getElementById('betSlider').value = String(stake);
-});
+      validateStake();
+      const stake = Number(document.getElementById('betStake').value || 0);
+      const potential = stake * (betCtx?.odds || 0);
+      document.getElementById('betReturn').textContent = stake > 0 ? fmtMoney.format(potential) : '-';
+      document.getElementById('betSlider').value = String(stake);
+    });
 
-// Slider -> atualiza retorno e campo numérico
-document.getElementById('betSlider').addEventListener('input', ()=>{
-  const v = Number(document.getElementById('betSlider').value || 0);
-  document.getElementById('betStake').value = String(v);
-  const potential = v * (betCtx?.odds || 0);
-  document.getElementById('betReturn').textContent = v > 0 ? fmtMoney.format(potential) : '-';
-  validateStake();
-});
+    document.getElementById('betSlider').addEventListener('input', ()=>{
+      const v = Number(document.getElementById('betSlider').value || 0);
+      document.getElementById('betStake').value = String(v);
+      const potential = v * (betCtx?.odds || 0);
+      document.getElementById('betReturn').textContent = v > 0 ? fmtMoney.format(potential) : '-';
+      validateStake();
+    });
 
-  async function confirmBet(){
-  const errBox = document.getElementById('betError');
-  errBox.classList.add('hidden'); errBox.textContent = '';
-  if (!betCtx) return;
+    async function confirmBet(){
+      const errBox = document.getElementById('betError');
+      errBox.classList.add('hidden'); errBox.textContent = '';
+      if (!betCtx) return;
 
-  const stake = Math.round(Number(document.getElementById('betStake').value || 0));
-  const bal   = Number(profile?.credit || 0);
+      const stake = Math.round(Number(document.getElementById('betStake').value || 0));
+      const bal   = Number(profile?.credit || 0);
 
-  // aposta já existente nesse match
-  const existing = myOpenBets.get(betCtx.matchId);
-  const alreadySameSide = (existing && existing.selection === betCtx.selection) ? Number(existing.stake || 0) : 0;
+      // aposta já existente nesse match
+      const existing = myOpenBets.get(betCtx.matchId);
+      const alreadySameSide = (existing && existing.selection === betCtx.selection) ? Number(existing.stake || 0) : 0;
 
-  // 0..1000 sempre
-  if (stake < 0 || stake > MAX_PER_MATCH){
-    errBox.textContent = `Valor inválido. Use de 0 a ${fmtMoney.format(MAX_PER_MATCH)}.`;
-    errBox.classList.remove('hidden');
-    return;
-  }
-
-  // dentro de confirmBet(), substitua o if (stake === 0) atual por:
-  if (stake === 0) {
-    if (alreadySameSide > 0) {
-      const matchId = betCtx.matchId;
-      const side = betCtx.selection;
-
-      try{
-        const { error } = await supabase.rpc('place_bet', {
-          p_match_id: matchId,
-          p_selection: side,
-          p_stake: 0 // cancelar
-        });
-        if (error) throw error;
-
-        // Recarrega perfil/apostas e confirma se realmente removeu
-        await ensureProfile();
-        await loadMyBets();
-
-        const still = myOpenBets.get(matchId);
-        if (still && still.selection === side) {
-          toast('Não foi possível cancelar. Tente novamente.', true);
-        } else {
-          toast('Aposta cancelada.');
-          closeBetSheet();
-          await loadMatches();
-        }
-        return;
-      }catch(err){
-        console.error(err);
-        errBox.textContent = 'Erro ao cancelar: ' + err.message;
+      // 0..MAX_PER_MATCH sempre
+      if (stake < 0 || stake > MAX_PER_MATCH){
+        errBox.textContent = `Valor inválido. Use de 0 a ${fmtMoney.format(MAX_PER_MATCH)}.`;
         errBox.classList.remove('hidden');
         return;
       }
-    } else {
-      toast('Nada para cancelar neste lado.');
-      return;
+
+      // se stake = 0 e existe aposta neste lado → cancelar
+      if (stake === 0) {
+        if (alreadySameSide > 0) {
+          const matchId = betCtx.matchId;
+          const side = betCtx.selection;
+
+          try{
+            const { error } = await supabase.rpc('place_bet', {
+              p_match_id: matchId,
+              p_selection: side,
+              p_stake: 0 // cancelar
+            });
+            if (error) throw error;
+
+            await ensureProfile();
+            await loadMyBets();
+
+            const still = myOpenBets.get(matchId);
+            if (still && still.selection === side) {
+              toast('Não foi possível cancelar. Tente novamente.', true);
+            } else {
+              toast('Aposta cancelada.');
+              closeBetSheet();
+              await loadMatches();
+            }
+            return;
+          }catch(err){
+            console.error(err);
+            errBox.textContent = 'Erro ao cancelar: ' + err.message;
+            errBox.classList.remove('hidden');
+            return;
+          }
+        } else {
+          toast('Nada para cancelar neste lado.');
+          return;
+        }
+      }
+
+      // Aumento efetivo que precisa de saldo (delta)
+      const delta = Math.max(0, stake - alreadySameSide);
+      if (delta > bal) {
+        toast('Crédito insuficiente para este valor.', true);
+        return;
+      }
+
+      try{
+        const { error } = await supabase.rpc('place_bet', {
+          p_match_id: betCtx.matchId,
+          p_selection: betCtx.selection,
+          p_stake: stake
+        });
+        if (error) throw error;
+        toast(alreadySameSide ? 'Aposta atualizada!' : 'Aposta realizada!');
+        closeBetSheet();
+        await ensureProfile();
+        await loadMyBets();
+        await loadMatches();
+      }catch(err){
+        console.error(err);
+        errBox.textContent = 'Erro ao apostar: ' + err.message;
+        errBox.classList.remove('hidden');
+      }
     }
-  }
-
-
-  // Aumento efetivo que precisa de saldo (delta)
-  const delta = Math.max(0, stake - alreadySameSide);
-  if (delta > bal) {
-    toast('Crédito insuficiente para este valor.', true);
-    return;
-  }
-
-  try{
-    const { error } = await supabase.rpc('place_bet', {
-      p_match_id: betCtx.matchId,
-      p_selection: betCtx.selection,
-      p_stake: stake
-    });
-    if (error) throw error;
-    toast(alreadySameSide ? 'Aposta atualizada!' : 'Aposta realizada!');
-    closeBetSheet();
-    await ensureProfile();
-    await loadMyBets();
-    await loadMatches();
-  }catch(err){
-    console.error(err);
-    errBox.textContent = 'Erro ao apostar: ' + err.message;
-    errBox.classList.remove('hidden');
-  }
-}
-
-
 
     document.getElementById('betConfirm').addEventListener('click', confirmBet);
     document.getElementById('preset10').addEventListener('click', ()=>{ const x=Number(document.getElementById('betStake').value||0)+10; document.getElementById('betSlider').value=String(x); document.getElementById('betSlider').dispatchEvent(new Event('input')); });
@@ -1312,17 +1374,17 @@ document.getElementById('betSlider').addEventListener('input', ()=>{
     // MINHAS APOSTAS / LB
     // =====================
     async function loadMyBets(){
-    const { data, error } = await supabase.from('bets')
-      .select(`id, match_id, selection, stake, odds, status, payout, created_at,
-        matches ( team_a, team_b, start_time, odd_a, odd_b, api_team_a_id, api_team_b_id, tournament_name, api_tournament_id )`)
-      .order('created_at', { ascending:false });
-    if (error) { console.error(error); toast('Erro ao carregar apostas', true); return; }
-    myBets = data || [];
-    myOpenBets = new Map();
-    for (const b of myBets){ if (b.status==='open') myOpenBets.set(b.match_id, b); }
-    renderBets();
-    renderMatches();
-  }
+      const { data, error } = await supabase.from('bets')
+        .select(`id, match_id, selection, stake, odds, status, payout, created_at,
+          matches ( team_a, team_b, start_time, odd_a, odd_b, api_team_a_id, api_team_b_id, tournament_name, api_tournament_id )`)
+        .order('created_at', { ascending:false });
+      if (error) { console.error(error); toast('Erro ao carregar apostas', true); return; }
+      myBets = data || [];
+      myOpenBets = new Map();
+      for (const b of myBets){ if (b.status==='open') myOpenBets.set(b.match_id, b); }
+      renderBets();
+      renderMatches();
+    }
 
     function renderBets(){
       const showHist = document.getElementById('toggleHistory').checked;
@@ -1377,219 +1439,203 @@ document.getElementById('betSlider').addEventListener('input', ()=>{
         tr.appendChild(td3);
         tbody.appendChild(tr);
       });
-}
+    }
 
     // =====================
     // ADMIN
     // =====================
-    // --- Persistência simples do formulário Admin ---
-const ADM_FORM_KEY = 'admFormStateV1';
+    const ADM_FORM_KEY = 'admFormStateV1';
 
-function getAdmEls(){
-  return {
-    a: document.getElementById('admSelA'),
-    b: document.getElementById('admSelB'),
-    t: document.getElementById('admTournament'),
-    start: document.getElementById('admStart'),
-    oa: document.getElementById('admOddA'),
-    ob: document.getElementById('admOddB'),
-  };
-}
-
-function saveAdmForm(){
-  const { a,b,t,start,oa,ob } = getAdmEls();
-  const state = {
-    a: a?.value ?? '',
-    b: b?.value ?? '',
-    t: t?.value ?? '',
-    start: start?.value ?? '',
-    oa: oa?.value ?? '',
-    ob: ob?.value ?? '',
-  };
-  localStorage.setItem(ADM_FORM_KEY, JSON.stringify(state));
-}
-
-function restoreAdmForm(){
-  try{
-    const st = JSON.parse(localStorage.getItem(ADM_FORM_KEY) || '{}');
-    const { a,b,t,start,oa,ob } = getAdmEls();
-    if (a && st.a !== undefined) a.value = st.a;
-    if (b && st.b !== undefined) b.value = st.b;
-    if (t && st.t !== undefined) t.value = st.t;
-    if (start && st.start !== undefined) {
-      start.value = st.start;
-      // atualiza o “hint” do horário
-      start.dispatchEvent(new Event('input'));
+    function getAdmEls(){
+      return {
+        a: document.getElementById('admSelA'),
+        b: document.getElementById('admSelB'),
+        t: document.getElementById('admTournament'),
+        start: document.getElementById('admStart'),
+        oa: document.getElementById('admOddA'),
+        ob: document.getElementById('admOddB'),
+      };
     }
-    if (oa && st.oa !== undefined) oa.value = st.oa;
-    if (ob && st.ob !== undefined) ob.value = st.ob;
-  }catch{}
-}
 
-// liga os eventos de salvar sempre que digitar/mudar algo
-(function bindAdmFormPersistence(){
-  const { a,b,t,start,oa,ob } = getAdmEls();
-  [a,b,t,start,oa,ob].forEach(el => {
-    if (!el) return;
-    el.addEventListener('input', saveAdmForm);
-    el.addEventListener('change', saveAdmForm);
-  });
-})();
-
-
-  async function populateAdminTeamSelects(){
-  const a = document.getElementById('admSelA'); 
-  const b = document.getElementById('admSelB');
-  if (!a || !b) return;
-
-  // preserva seleção atual
-  const prevA = a.value, prevB = b.value;
-
-  // ordena alfabeticamente pelo nome (case/acentos OK)
-  const sortedTeams = (teams||[])
-    .slice()
-    .sort((x,y) => (x.name||'').localeCompare(y.name||'', 'pt-BR', {sensitivity:'base'}));
-
-  // monta opções apenas com o NOME
-  const makeOpts = () => {
-    const frag = document.createDocumentFragment();
-    const opt0 = document.createElement('option');
-    opt0.value=''; opt0.textContent='Selecione...';
-    frag.appendChild(opt0);
-
-    for (const t of sortedTeams){
-      const o = document.createElement('option');
-      o.value = String(t.id);
-      o.textContent = t.name || `#${t.id}`;
-      frag.appendChild(o);
+    function saveAdmForm(){
+      const { a,b,t,start,oa,ob } = getAdmEls();
+      const state = {
+        a: a?.value ?? '',
+        b: b?.value ?? '',
+        t: t?.value ?? '',
+        start: start?.value ?? '',
+        oa: oa?.value ?? '',
+        ob: ob?.value ?? '',
+      };
+      localStorage.setItem(ADM_FORM_KEY, JSON.stringify(state));
     }
-    return frag;
-  };
 
-  a.innerHTML=''; b.innerHTML='';
-  a.appendChild(makeOpts()); 
-  b.appendChild(makeOpts());
+    function restoreAdmForm(){
+      try{
+        const st = JSON.parse(localStorage.getItem(ADM_FORM_KEY) || '{}');
+        const { a,b,t,start,oa,ob } = getAdmEls();
+        if (a && st.a !== undefined) a.value = st.a;
+        if (b && st.b !== undefined) b.value = st.b;
+        if (t && st.t !== undefined) t.value = st.t;
+        if (start && st.start !== undefined) {
+          start.value = st.start;
+          start.dispatchEvent(new Event('input'));
+        }
+        if (oa && st.oa !== undefined) oa.value = st.oa;
+        if (ob && st.ob !== undefined) ob.value = st.ob;
+      }catch{}
+    }
 
-  // restaura seleção anterior se existir
-  if (prevA) a.value = prevA;
-  if (prevB) b.value = prevB;
+    (function bindAdmFormPersistence(){
+      const { a,b,t,start,oa,ob } = getAdmEls();
+      [a,b,t,start,oa,ob].forEach(el => {
+        if (!el) return;
+        el.addEventListener('input', saveAdmForm);
+        el.addEventListener('change', saveAdmForm);
+      });
+    })();
 
-  // cria/garante previews "Logo + Nome"
-  ensureTeamPreviewForSelect(a, 'admSelAPreview');
-  ensureTeamPreviewForSelect(b, 'admSelBPreview');
+    async function populateAdminTeamSelects(){
+      const a = document.getElementById('admSelA'); 
+      const b = document.getElementById('admSelB');
+      if (!a || !b) return;
 
-  // aplica estado salvo (localStorage) e atualiza previews
-  restoreAdmForm();
-  updateTeamPreview(a, 'admSelAPreview');
-  updateTeamPreview(b, 'admSelBPreview');
+      const prevA = a.value, prevB = b.value;
 
-  // quando mudar seleção, atualiza preview
-  a.addEventListener('change', () => updateTeamPreview(a, 'admSelAPreview'));
-  b.addEventListener('change', () => updateTeamPreview(b, 'admSelBPreview'));
-}
+      const sortedTeams = (teams||[])
+        .slice()
+        .sort((x,y) => (x.name||'').localeCompare(y.name||'', 'pt-BR', {sensitivity:'base'}));
 
-// cria o contêiner do preview se não existir
-function ensureTeamPreviewForSelect(selectEl, previewId){
-  const parent = selectEl.parentElement || selectEl;
-  let pv = document.getElementById(previewId);
-  if (!pv){
-    pv = document.createElement('div');
-    pv.id = previewId;
-    pv.className = 'team-preview';
-    parent.appendChild(pv);
-  }
-}
+      const makeOpts = () => {
+        const frag = document.createDocumentFragment();
+        const opt0 = document.createElement('option');
+        opt0.value=''; opt0.textContent='Selecione...';
+        frag.appendChild(opt0);
 
-// atualiza conteúdo "Logo + Nome"
-function updateTeamPreview(selectEl, previewId){
-  const pv = document.getElementById(previewId);
-  if (!pv) return;
+        for (const t of sortedTeams){
+          const o = document.createElement('option');
+          o.value = String(t.id);
+          o.textContent = t.name || `#${t.id}`;
+          frag.appendChild(o);
+        }
+        return frag;
+      };
 
-  const id = parseInt(selectEl.value || '0', 10);
-  const t = teamsById.get(id);
-  pv.innerHTML = '';
+      a.innerHTML=''; b.innerHTML='';
+      a.appendChild(makeOpts()); 
+      b.appendChild(makeOpts());
 
-  if (!id || !t){
-    pv.classList.add('hidden');
-    return;
-  }
-  pv.classList.remove('hidden');
+      if (prevA) a.value = prevA;
+      if (prevB) b.value = prevB;
 
-  const av = document.createElement('div');
-  av.className = 'avatar-sm';
-  if (t.logo){
-    const img = document.createElement('img');
-    img.src = t.logo; img.alt = t.name || '';
-    av.appendChild(img);
-  } else {
-    av.textContent = initials(t.name || '');
-  }
+      ensureTeamPreviewForSelect(a, 'admSelAPreview');
+      ensureTeamPreviewForSelect(b, 'admSelBPreview');
 
-  const name = document.createElement('span');
-  name.className = 'name';
-  name.textContent = t.name || `#${id}`;
+      restoreAdmForm();
+      updateTeamPreview(a, 'admSelAPreview');
+      updateTeamPreview(b, 'admSelBPreview');
 
-  pv.appendChild(av);
-  pv.appendChild(name);
-}
-  
+      a.addEventListener('change', () => updateTeamPreview(a, 'admSelAPreview'));
+      b.addEventListener('change', () => updateTeamPreview(b, 'admSelBPreview'));
+    }
 
-  async function populateAdminTournaments(){
-  const sel = document.getElementById('admTournament');
-  if (!sel) return;
+    function ensureTeamPreviewForSelect(selectEl, previewId){
+      const parent = selectEl.parentElement || selectEl;
+      let pv = document.getElementById(previewId);
+      if (!pv){
+        pv = document.createElement('div');
+        pv.id = previewId;
+        pv.className = 'team-preview';
+        parent.appendChild(pv);
+      }
+    }
 
-  const prev = sel.value; // preserva seleção atual
-  sel.innerHTML = '';
+    function updateTeamPreview(selectEl, previewId){
+      const pv = document.getElementById(previewId);
+      if (!pv) return;
 
-  const opt0 = document.createElement('option'); opt0.value=''; opt0.textContent='Selecione...'; sel.appendChild(opt0);
-  for (const t of tournaments){
-    const o = document.createElement('option');
-    o.value = String(t.id);
-    o.textContent = t.name;
-    sel.appendChild(o);
-  }
+      const id = parseInt(selectEl.value || '0', 10);
+      const t = teamsById.get(id);
+      pv.innerHTML = '';
 
-  if (prev) sel.value = prev;
+      if (!id || !t){
+        pv.classList.add('hidden');
+        return;
+      }
+      pv.classList.remove('hidden');
 
-  // aplica estado salvo, se houver (útil no primeiro load)
-  restoreAdmForm();
-}    
+      const av = document.createElement('div');
+      av.className = 'avatar-sm';
+      if (t.logo){
+        const img = document.createElement('img');
+        img.src = t.logo; img.alt = t.name || '';
+        av.appendChild(img);
+      } else {
+        av.textContent = initials(t.name || '');
+      }
+
+      const name = document.createElement('span');
+      name.className = 'name';
+      name.textContent = t.name || `#${id}`;
+
+      pv.appendChild(av);
+      pv.appendChild(name);
+    }
+
+    async function populateAdminTournaments(){
+      const sel = document.getElementById('admTournament');
+      if (!sel) return;
+
+      const prev = sel.value;
+      sel.innerHTML = '';
+
+      const opt0 = document.createElement('option'); opt0.value=''; opt0.textContent='Selecione...'; sel.appendChild(opt0);
+      for (const t of tournaments){
+        const o = document.createElement('option');
+        o.value = String(t.id);
+        o.textContent = t.name;
+        sel.appendChild(o);
+      }
+
+      if (prev) sel.value = prev;
+
+      restoreAdmForm();
+    }
 
     document.getElementById('admCreate').addEventListener('click', async () => {
-  const selA = document.getElementById('admSelA'); const selB = document.getElementById('admSelB');
-  const selT = document.getElementById('admTournament');
-  const idA = parseInt(selA.value || '0'); const idB = parseInt(selB.value || '0');
-  const tId = parseInt(selT.value || '0');
-  const startLocal = document.getElementById('admStart').value; // 'YYYY-MM-DDTHH:mm'
-  const odd_a = parseFloat(document.getElementById('admOddA').value||'0');
-  const odd_b = parseFloat(document.getElementById('admOddB').value||'0');
-  if(!idA||!idB||idA===idB||!tId||!startLocal||odd_a<1||odd_b<1){ document.getElementById('admMsg').textContent='Preencha todos os campos.'; return; }
+      const selA = document.getElementById('admSelA'); const selB = document.getElementById('admSelB');
+      const selT = document.getElementById('admTournament');
+      const idA = parseInt(selA.value || '0'); const idB = parseInt(selB.value || '0');
+      const tId = parseInt(selT.value || '0');
+      const startLocal = document.getElementById('admStart').value; // 'YYYY-MM-DDTHH:mm'
+      const odd_a = parseFloat(document.getElementById('admOddA').value||'0');
+      const odd_b = parseFloat(document.getElementById('admOddB').value||'0');
+      if(!idA||!idB||idA===idB||!tId||!startLocal||odd_a<1||odd_b<1){ document.getElementById('admMsg').textContent='Preencha todos os campos.'; return; }
 
-  const teamA = teamsById.get(idA); const teamB = teamsById.get(idB);
-  const tour = tournamentsById.get(tId);
-  const team_a = teamA?.name || 'Time A'; const team_b = teamB?.name || 'Time B';
-       document.getElementById('admMsg').textContent = 'Criando...';
+      const teamA = teamsById.get(idA); const teamB = teamsById.get(idB);
+      const tour = tournamentsById.get(tId);
+      const team_a = teamA?.name || 'Time A'; const team_b = teamB?.name || 'Time B';
+      document.getElementById('admMsg').textContent = 'Criando...';
 
-  const payload = {
-    team_a, team_b,
-    api_team_a_id: idA, api_team_b_id: idB,
-    api_tournament_id: tId,
-    tournament_name: tour?.name || null,
-    tournament_logo: tour?.logo || null,
-    start_time: toISOInBRT(startLocal),
-    odd_a, odd_b, status:'open'
-  };
+      const payload = {
+        team_a, team_b,
+        api_team_a_id: idA, api_team_b_id: idB,
+        api_tournament_id: tId,
+        tournament_name: tour?.name || null,
+        tournament_logo: tour?.logo || null,
+        start_time: toISOInBRT(startLocal),
+        odd_a, odd_b, status:'open'
+      };
 
-  const { error } = await supabase.from('matches').insert(payload);
-  document.getElementById('admMsg').textContent = error ? 'Erro: '+error.message : 'Criado!';
+      const { error } = await supabase.from('matches').insert(payload);
+      document.getElementById('admMsg').textContent = error ? 'Erro: '+error.message : 'Criado!';
 
-  if (!error) {
-    // garante que o estado permaneça salvo
-    saveAdmForm();
-    await loadMatches();
-    await loadAdminMatches();
-  }
-});
+      if (!error) {
+        saveAdmForm();
+        await loadMatches();
+        await loadAdminMatches();
+      }
+    });
 
     async function loadAdminMatches(){
       const { data, error } = await supabase.from('matches')
@@ -1708,9 +1754,9 @@ function updateTeamPreview(selectEl, previewId){
     // TEAM MODAL
     // =====================
     function openModal(){
-  const bd = document.getElementById('modalBackdrop');
-  bd.classList.remove('hidden');
-  requestAnimationFrame(()=> bd.classList.add('show'));
+      const bd = document.getElementById('modalBackdrop');
+      bd.classList.remove('hidden');
+      requestAnimationFrame(()=> bd.classList.add('show'));
     }
     function closeModal(){
       const bd = document.getElementById('modalBackdrop');
@@ -1808,15 +1854,25 @@ function updateTeamPreview(selectEl, previewId){
     // =====================
     function subscribeRealtime(){
       try{
-        const ch = supabase.channel('realtime-all');
-        ch.on('postgres_changes', { event: '*', schema:'public', table:'matches' }, (_payload) => {
+        if (!session?.user) return;
+
+        // evita múltiplos canais; recria se mudou de usuário
+        if (rtChannel && rtUserId === session.user.id) return;
+        if (rtChannel) { supabase.removeChannel(rtChannel); rtChannel = null; }
+
+        rtChannel = supabase.channel('realtime-all');
+
+        rtChannel.on('postgres_changes', { event: '*', schema:'public', table:'matches' }, () => {
           loadMatches();
           if (isAdmin) loadAdminMatches();
         });
-        ch.on('postgres_changes', { event: '*', schema:'public', table:'bets', filter: `user_id=eq.${session.user.id}` }, (_payload) => {
+
+        rtChannel.on('postgres_changes', { event: '*', schema:'public', table:'bets', filter: `user_id=eq.${session.user.id}` }, () => {
           loadMyBets(); ensureProfile();
         });
-        ch.subscribe((status) => { setOnline(status === 'SUBSCRIBED'); });
+
+        rtChannel.subscribe((status) => { setOnline(status === 'SUBSCRIBED'); });
+        rtUserId = session.user.id;
       }catch(e){ setOnline(false); }
     }
 
@@ -1851,10 +1907,10 @@ function updateTeamPreview(selectEl, previewId){
       hint.className = 'muted';
       admStartEl.parentElement.appendChild(hint);
       const upd = () => {
-  if (!admStartEl.value) { hint.textContent = ''; return; }
-  const iso = toISOInBRT(admStartEl.value); // o que será salvo (UTC/Z)
-  hint.textContent = `→ Salva: ${iso} • Mostra: ${fmtDate(iso)} (BRT)`;
-};
+        if (!admStartEl.value) { hint.textContent = ''; return; }
+        const iso = toISOInBRT(admStartEl.value); // o que será salvo (UTC/Z)
+        hint.textContent = `→ Salva: ${iso} • Mostra: ${fmtDate(iso)} (BRT)`;
+      };
       admStartEl.addEventListener('input', upd);
       upd();
     })();
