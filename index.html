@@ -443,12 +443,51 @@
     const { createClient } = window.supabase;
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+    let RECOVERY_LOCK = false;
+
     const MAX_PER_MATCH = 10; // teto por partida
 
     const REDIRECT_TO = (location.origin + location.pathname)
   .replace(/index\.html?$/,'')
   .replace(/\/?$/, '/'); // garante barra no final
-    // =====================
+
+    async function startRecoveryFlow(){
+  if (RECOVERY_LOCK) return;
+  RECOVERY_LOCK = true;
+  try{
+    const { data: s1 } = await supabase.auth.getSession();
+    if (!s1.session) {
+      const params = new URLSearchParams(location.hash.slice(1));
+      const at = params.get('access_token');
+      const rt = params.get('refresh_token');
+      if (at && rt) {
+        const { error: setErr } = await supabase.auth.setSession({ access_token: at, refresh_token: rt });
+        if (setErr) throw setErr;
+      }
+    }
+
+    const newPass = prompt('Digite sua nova senha (mín. 6 caracteres):');
+    if (!newPass) {
+      // opcional: limpa o hash pra não reentrar se a pessoa cancelou
+      if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+      await refreshSession();
+      return;
+    }
+
+    const { error } = await supabase.auth.updateUser({ password: newPass });
+    if (error) throw error;
+
+    toast('Senha alterada com sucesso. Você já está logado.');
+    if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+    await refreshSession();
+  } catch (e){
+    toast('Erro ao redefinir senha: ' + e.message, true);
+  } finally {
+    RECOVERY_LOCK = false;
+  }
+}  
+
+  // =====================
     // UTIL
     // =====================
     // Fuso horário fixo (Brasília)
@@ -580,23 +619,24 @@ function toISOInBRT(ymdHm) {
       }
     }
 
-    supabase.auth.onAuthStateChange(async (event, _sess) => {
-  // quando o usuário clica no link do e-mail e volta ao seu site
-  if (event === 'PASSWORD_RECOVERY') {
-    try {
-      const newPass = prompt('Digite sua nova senha (mín. 6 caracteres):');
-      if (!newPass) return;
-      const { error } = await supabase.auth.updateUser({ password: newPass });
-      if (error) throw error;
-      toast('Senha alterada com sucesso. Você já está logado.');
-      // opcional: limpar o fragmento da URL (tokens):
-      if (location.hash) history.replaceState(null, '', location.pathname + location.search);
-    } catch (e) {
-      toast('Erro ao redefinir senha: ' + e.message, true);
-    }
-  }
-  refreshSession();
-});
+      supabase.auth.onAuthStateChange(async (event, _sess) => {
+      const isRecoveryHash = new URLSearchParams(location.hash.slice(1)).get('type') === 'recovery';
+
+      if (event === 'PASSWORD_RECOVERY' || (event === 'SIGNED_IN' && isRecoveryHash)) {
+        await startRecoveryFlow();
+        return; // o próprio startRecoveryFlow já chama refreshSession()
+      }
+
+      refreshSession();
+    });
+
+    (function bootstrapRecoveryFromHash(){
+      const params = new URLSearchParams(location.hash.slice(1));
+      if (params.get('type') === 'recovery') {
+        startRecoveryFlow();
+      }
+    })();
+
 
     async function checkAdmin(){
       try{
